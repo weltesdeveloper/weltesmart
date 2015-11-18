@@ -73,8 +73,11 @@ $todaysDate = date("m/d/y");
         </div>
 
         <div class="row">
-            <div class="col-md-12 col-xs-12 col-lg-12">
-                <button class="btn btn-block btn-success" id="submit-checkout">SUBMIT REQUEST</button>
+            <div class="col-md-6 col-xs-6 col-lg-6">
+                <button class="btn btn-block btn-success" id="submit-checkout">SUBMIT</button>
+            </div>
+            <div class="col-md-6 col-xs-6 col-lg-6">
+                <button class="btn btn-block btn-success" id="submit-checkout">SUBMIT & PRINT</button>
             </div>
         </div>
 
@@ -121,11 +124,13 @@ $todaysDate = date("m/d/y");
                 [
                     counter,
                     "<select class='selectpicker' data-id='item-name' data-live-search='true' data-width='100%' title='Select Inventory...' id='inventory-detail-drop" + counter + "'></select>",
-                    "<input type='number' class='form-control' style='width: -moz-available;'/>",
+                    "<input type='number' class='form-control' id='inventory-quantity-masked' style='width: -moz-available;'/>",
                     "<input type='text' class='form-control' style='width: -moz-available;'/>",
                     "&nbsp;<i class='fa fa-trash fa-fw fa-lg text-danger' style='cursor: pointer; width: 2.286em; vertical-align: -70%;'  ></i>"
                 ]).draw(false);
-        $('.selectpicker').selectpicker();
+                
+        $('.selectpicker').selectpicker(); // SELECTPICKER FOR INVENTORY SELECTION
+        $('#inventory-quantity-masked').inputmask("9999"); // INITIALIZE INPUTMASK FOR EVERY INVENTORY SELECTION
 
         // FILLING INVENTORY DROPDOWN SELECTPICKER
         $('#inventory-detail-drop' + counter).each(function (index, value)

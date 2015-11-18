@@ -28,7 +28,7 @@ $todaysDate = date("m/d/y");
                 <select class="selectpicker form-control" data-live-search='true' id='inv-type-select'>
                     <option value='%' selected>ALL</option>
                     <?php
-                    $invCatParse = oci_parse($conn, "SELECT DISTINCT MI.INV_TYPE FROM MASTER_INV@WELTESMART_WENLOGINV_LINK MI WHERE MI.INV_CAT = 'CONSUMABLE' ORDER BY MI.INV_TYPE ASC");
+                    $invCatParse = oci_parse($conn, "SELECT DISTINCT MSI.INV_TYPE FROM MART_STOCK_INFO MSI ORDER BY MSI.INV_TYPE ASC");
                     $invExcErr = oci_execute($invCatParse);
                     if (!$invExcErr) {
                         $e = oci_error($invCatParse);
@@ -77,7 +77,7 @@ $todaysDate = date("m/d/y");
                                 <th class="text-center" style="width: 6%">UNIT</th>
                                 <th class="text-center" style="width: 10%">ON HAND</th>
                                 <th class="text-center" style="width: 10%">MINIMUM STOCK</th>
-                                <th class="text-center" style="width: 10%">STATUS</th>
+                                <th class="text-center" style="width: 10%">STOCK STATUS</th>
                                 <th class="text-center" style="width: 16%">DETAILS/ACTIONS</th>
                             </tr>
                         </thead>
@@ -188,6 +188,7 @@ $todaysDate = date("m/d/y");
                 "columnDefs":
                         [
                             {
+                                "orderable" : true,
                                 "visible": true,
                                 "targets": [3],
                                 "className": 'text-center',
@@ -210,10 +211,12 @@ $todaysDate = date("m/d/y");
                                 "targets": [5],
                                 "className": 'text-center',
                                 "render": function (data, type, row, meta) {
-                                    if (row.INV_STK_MIN > row.INV_STK_QTY) {
-                                        return '<button type="button" class="btn btn-xs btn-danger" onclick=ordermanagement("CREATE_PR")>NEED TO REORDER</button>';
+                                    if (row.REORDERSTATUS == 'NOT SET') {
+                                        return '<button type="button" class="btn btn-xs btn-warning" value='+row.REORDERSTATUS+' disabled>'+row.REORDERSTATUS+'</button>';
+                                    } else if (row.REORDERSTATUS == 'NEED TO REORDER') {
+                                        return '<button type="button" class="btn btn-xs btn-danger" value='+row.REORDERSTATUS+' onclick=ordermanagement("CREATE_PR")>'+row.REORDERSTATUS+'</button>';
                                     } else {
-                                        return '<button type="button" class="btn btn-xs btn-success" disabled>OK</button>';
+                                        return '<button type="button" class="btn btn-xs btn-success" value='+row.REORDERSTATUS+' disabled>'+row.REORDERSTATUS+'</button>';
                                     }
                                 }
                             },
@@ -222,14 +225,14 @@ $todaysDate = date("m/d/y");
                                 "data": null,
                                 "className": 'text-center',
                                 "render": function (data, type, row, meta) {
-                                    var isi = "<button class='btn btn-xs btn-default' onclick=Details('" + row.INV_ID + "')>DTLS</button>  \n\
-                                                    <button class='btn btn-xs btn-default' onclick=Reserve('" + row.INV_ID + "')>RSVP</button>  \n\
-                                                    <button class='btn btn-xs btn-primary' onclick=History('" + row.INV_ID + "')>HIST</button>";
+                                    var isi = "<button class='btn btn-xs btn-default' onclick=Details('" + row.INV_ID + "')>DETAILS</button>  \n\
+                                                    <button class='btn btn-xs btn-primary' onclick=History('" + row.INV_ID + "')>HISTORY</button>";
                                                     
                                     return isi;
                                 }
                             }
                         ],
+                        
                 "drawCallback": function (settings) {
                     $('.initStockClass').editable({
                         validate: function (value) {
@@ -252,6 +255,7 @@ $todaysDate = date("m/d/y");
                             });
                         }
                     });
+                    
                     $('.initMinStockClass').editable({
                         validate: function (value) {
                             if ($.trim(value) == '') {
@@ -298,11 +302,11 @@ $todaysDate = date("m/d/y");
                 $.each(response.value1, function (key, value) {
 
                     content += "<tr>" +
-                            "<td class='text-center'>" + value.INPUT_DATE + "</td>" +
-                            "<td class='text-center'>" + value.INV_DESC + "</td>" +
-                            "<td class='text-center'>" + value.HIST_ADJUST + "</td>" +
-                            "<td class='text-center'>" + (value.HIST_ADJUST + " updated by : " + value.INPUT_SIGN) + "</td>" +
-                            "</tr>";
+                                "<td class='text-center'>" + value.INPUT_DATE + "</td>" +
+                                "<td class='text-center'>" + value.INV_DESC + "</td>" +
+                                "<td class='text-center'>" + value.HIST_ADJUST + "</td>" +
+                                "<td class='text-center'>" + (value.HIST_ADJUST + " updated by : " + value.INPUT_SIGN) + "</td>" +
+                                "</tr>";
                 });
                 $('#inv-id').text(response.value2);
                 $('#modal-table tbody').append(content);
@@ -314,7 +318,6 @@ $todaysDate = date("m/d/y");
     }
 
     function Details(param) {
-
         $.ajax({
             type: 'POST',
             url: "../_includes/inventory/process/process.php",

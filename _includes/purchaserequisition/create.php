@@ -44,8 +44,7 @@ $todaysDate = date("m/d/y");
 
                         <div class="col-md-4">
                             <select class="selectpicker" id="dlv-loc-pr" data-width="100%" data-title="DELIVERY LOCATION">
-                                <option>WORKSHOP</option>
-                                <option>WAREHOUSE</option>
+                                <option selected="">WAREHOUSE</option>
                                 <option>SITE</option>
                             </select>
                         </div>
@@ -120,10 +119,9 @@ $todaysDate = date("m/d/y");
         $('#add-pr-item').on('click', function () {
             var newTargetRow = prlist_table.fnAddData([
                 "<select class='selectpicker' data-id='item-name' data-live-search='true' data-width='100%' title='Select Inventory...' id='inventory-detail-drop" + counter + "'></select>",
-                "<input type='number' class='form-control' style='width: -moz-available;'/>",
+                "<input type='number' class='form-control' style='width: -moz-available;' value='1'/>",
                 "<select class='selectpicker' data-id='item-unit' data-live-search='true' data-width='100%' title='Select Unit' id='item-unit" + counter + "'></select>",
-                "<div class='input-group'><select id=brand-unit" + counter + " class='selectpicker form-control' multiple data-live-search='true'></select>"
-                        + "<span class='input-group-btn' > < button class = 'btn btn-primary btn-xs' onclick = addbrand('" + counter + "') style = 'cursor:pointer;' > + < /button>", // BRAND
+                "<select id=brand-unit" + counter + " class='selectpicker form-control' multiple data-live-search='true'></select>",
                 "<input type='text' class='form-control' style='width: -moz-available;'/></div>",
                 "<i class='fa fa-trash fa-fw fa-lg text-danger' style='cursor: pointer;' onclick=DeleteItem(" + counter + ")></i>"
             ]);
@@ -202,46 +200,56 @@ $todaysDate = date("m/d/y");
             var inv_id = [];
             var inv_qty = [];
             var inv_unit = [];
+            var inv_brand = [];
             var inv_remark = [];
             var rows = $('#pr-list-inv').dataTable().fnGetNodes();
             for (var x = 0; x < rows.length; x++) {
-                inv_id.push($(rows[x]).find("td:eq(0)").find("input").val());
+                inv_id.push($(rows[x]).find("td:eq(0)").find("select").val());
                 inv_qty.push($(rows[x]).find("td:eq(1)").find("input").val());
-                inv_unit.push($(rows[x]).find("td:eq(2)").find("input").val());
-                inv_remark.push($(rows[x]).find("td:eq(3)").find("input").val());
+                inv_unit.push($(rows[x]).find("td:eq(2)").find("select").val());
+                inv_brand.push($(rows[x]).find("td:eq(3)").find("select").val());
+                inv_remark.push($(rows[x]).find("td:eq(4)").find("input").val());
             }
-            var job = $('#job-dropdown-pr').val();
-            var sub_job = $('#subjob-dropdown-pr').val();
             var pr_no = $('#pr-number').text().trim();
             var date = $('#pr-date').val();
             var location = $('#dlv-loc-pr').val();
-            var spv = $('#spv-dropdown-pr').val();
             var remark = $('#remark').val();
 
             var sentReq = {
-                job: job,
-                sub_job: sub_job,
+                action: "submit_pr",
                 pr_no: pr_no,
                 date: date,
                 location: location,
-                spv: spv,
                 remark: remark,
                 inv_id: inv_id,
                 inv_qty: inv_qty,
                 inv_remark: inv_remark,
                 inv_unit: inv_unit,
-                action: "submit_pr"
+                inv_brand: inv_brand
             };
-
-            console.log(sentReq);
-            $.ajax({
-                type: 'POST',
-                url: "../_includes/purchaserequisition/process/process_pr.php",
-                data: sentReq,
-                success: function (response, textStatus, jqXHR) {
-
+            if (inv_id.length == 0) {
+                swal("TOLONG ISIKAN MINIMAL 1 BARANG", "!!!!", "error")
+            } else {
+                console.log(sentReq);
+                var cf = confirm("DO YOU WANT SUBMIT THIS PR ?");
+                if (cf == true) {
+                    $.ajax({
+                        type: 'POST',
+                        url: "../_includes/purchaserequisition/process/process_pr.php",
+                        data: sentReq,
+                        success: function (response, textStatus, jqXHR) {
+                            if (response.indexOf("GAGAL") >= 0) {
+                                swal("GAGAL INSERT", response, "success");
+                            } else {
+                                swal("SUKSES INSERT", "good job", "success");
+                                pr('CREATE_PR');
+                            }
+                        }
+                    });
+                } else {
+                    return false;
                 }
-            });
+            }
         });
     });
     function DeleteItem(param) {

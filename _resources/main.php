@@ -88,6 +88,8 @@ $todaysDate = date("m/d/y");
         <link href="../_templates/plugins/jquery-ui-1.11.4/jquery-ui.theme.min.css" rel="stylesheet" type="text/css"/>
         <!--sweet alert-->
         <link href="../_templates/plugins/sweetalert-master/dist/sweetalert.css" rel="stylesheet" type="text/css">
+        <!-- SWITCHERY -->
+        <link href="../_templates/plugins/switchery-master/dist/switchery.min.css" rel="stylesheet" type="text/css"/>
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
         <!--[if lt IE 9]>
@@ -97,14 +99,14 @@ $todaysDate = date("m/d/y");
     </head>
     <body class="hold-transition skin-blue sidebar-mini fixed">
         <!-- dialog window markup -->
-        <div id="dialog" title="Your session is about to expire!">
-            <?php $idleCount = SingleQryFld("SELECT WMS.SETTING_VALUE FROM MART_SETTINGS WMS WHERE WMS.SETTING_DESC = 'SESSION_TIMEOUT'", $conn) ?>
-            <input type="number" value="<?php echo $idleCount; ?>" hidden="" id="idle-value">
-            <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 50px 0;"></span>
-                You will be logged off in <span id="dialog-countdown" style="font-weight:bold"></span> seconds.
-            </p>
-            <p>Do you want to continue your session?</p>
-        </div>
+        <!--        <div id="dialog" title="Your session is about to expire!">
+        <?php // $idleCount = SingleQryFld("SELECT WMS.SETTING_VALUE FROM MART_SETTINGS WMS WHERE WMS.SETTING_DESC = 'SESSION_TIMEOUT'", $conn) ?>
+                    <input type="number" value="<?php // echo $idleCount;  ?>" hidden="" id="idle-value">
+                    <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 50px 0;"></span>
+                        You will be logged off in <span id="dialog-countdown" style="font-weight:bold"></span> seconds.
+                    </p>
+                    <p>Do you want to continue your session?</p>
+                </div>-->
 
         <div class="wrapper">
             <header class="main-header">
@@ -179,9 +181,14 @@ $todaysDate = date("m/d/y");
         <!-- QRCODE GENERATOR -->
         <script src="../_templates/plugins/qrcode/jquery.qrcode-0.12.0.min.js" type="text/javascript"></script>
         <!-- IDLE TIMER JS -->
-        <script src="../_templates/js/idletimer.js" type="text/javascript"></script>
+        <!--<script src="../_templates/js/idletimer.js" type="text/javascript"></script>-->
         <!--sweet alert-->
         <script src="../_templates/plugins/sweetalert-master/dist/sweetalert.min.js"></script>
+        <script src="../_templates/plugins/iCheck/icheck.min.js" type="text/javascript"></script>
+        <!-- INPUT MASK -->
+        <script src="../_templates/plugins/input-mask/jquery.inputmask.js" type="text/javascript"></script>\
+        <!-- SWITCHERY -->
+        <script src="../_templates/plugins/switchery-master/dist/switchery.js" type="text/javascript"></script>
         <script>
             $.widget.bridge('uibutton', $.ui.button);
         </script>

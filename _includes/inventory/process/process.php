@@ -13,18 +13,22 @@ $username = htmlentities($_SESSION['userlogin'], ENT_QUOTES);
 switch ($_POST['action']) {
     case "load_data":
         $invtype = $_POST['invType'];
-        $QUERY = "SELECT MI.INV_ID, "
-                . "MI.INV_DESC, "
-                . "MI.INV_UNIT, "
-                . "NVL (MSA.INV_STK_QTY, 0) INV_STK_QTY, "
-                . "NVL (MSA.INV_STK_MIN, 0) INV_STK_MIN "
-                . "FROM MART_STK_ADJ MSA "
-                . "RIGHT OUTER JOIN "
-                . "MASTER_INV@WELTESMART_WENLOGINV_LINK MI "
-                . "ON MI.INV_ID = MSA.INV_ID "
-                . "WHERE MI.INV_CAT = 'CONSUMABLE' AND MI.INV_TYPE LIKE '$invtype'"
-                . "ORDER BY INV_DESC ASC";
-        $sql = oci_parse($conn, "$QUERY");
+        
+//        $QUERY = "SELECT MI.INV_ID, "
+//                . "MI.INV_DESC, "
+//                . "MI.INV_UNIT, "
+//                . "NVL (MSA.INV_STK_QTY, 0) INV_STK_QTY, "
+//                . "NVL (MSA.INV_STK_MIN, 0) INV_STK_MIN "
+//                . "FROM MART_STK_ADJ MSA "
+//                . "RIGHT OUTER JOIN "
+//                . "MASTER_INV@WELTESMART_WENLOGINV_LINK MI "
+//                . "ON MI.INV_ID = MSA.INV_ID "
+//                . "WHERE MI.INV_CAT != 'JASA' AND MI.INV_TYPE LIKE '$invtype' AND INV_WM_SELECT = 1 "
+//                . "ORDER BY INV_DESC ASC";
+        
+        $query2 = "SELECT MSI.* FROM MART_STOCK_INFO MSI WHERE MSI.INV_TYPE LIKE '$invtype' ORDER BY MSI.INV_DESC ASC";
+        
+        $sql = oci_parse($conn, $query2);
         $errExc = oci_execute($sql);
 
         if (!$errExc) {
