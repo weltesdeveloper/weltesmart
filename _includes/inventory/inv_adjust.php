@@ -105,6 +105,7 @@ $todaysDate = date("m/d/y");
                                     <th class="text-center">INV DESC</th>
                                     <th class="text-center">LOG</th>
                                     <th class="text-center">REMARK</th>
+                                    <th class="text-center">SIGN</th>
                                 </tr>
                             </thead>
                             <tfoot>
@@ -113,6 +114,7 @@ $todaysDate = date("m/d/y");
                                     <th class="text-center">INV DESC</th>
                                     <th class="text-center">LOG</th>
                                     <th class="text-center">REMARK</th>
+                                    <th class="text-center">SIGN</th>
                                 </tr>
                             </tfoot>
                             <tbody>
@@ -188,7 +190,7 @@ $todaysDate = date("m/d/y");
                 "columnDefs":
                         [
                             {
-                                "orderable" : true,
+                                "orderable": true,
                                 "visible": true,
                                 "targets": [3],
                                 "className": 'text-center',
@@ -212,11 +214,11 @@ $todaysDate = date("m/d/y");
                                 "className": 'text-center',
                                 "render": function (data, type, row, meta) {
                                     if (row.REORDERSTATUS == 'NOT SET') {
-                                        return '<button type="button" class="btn btn-xs btn-warning" value='+row.REORDERSTATUS+' disabled>'+row.REORDERSTATUS+'</button>';
+                                        return '<button type="button" class="btn btn-xs btn-warning" value=' + row.REORDERSTATUS + ' disabled>' + row.REORDERSTATUS + '</button>';
                                     } else if (row.REORDERSTATUS == 'NEED TO REORDER') {
-                                        return '<button type="button" class="btn btn-xs btn-danger" value='+row.REORDERSTATUS+' onclick=ordermanagement("CREATE_PR")>'+row.REORDERSTATUS+'</button>';
+                                        return '<button type="button" class="btn btn-xs btn-danger" value=' + row.REORDERSTATUS + ' onclick=ordermanagement("CREATE_PR")>' + row.REORDERSTATUS + '</button>';
                                     } else {
-                                        return '<button type="button" class="btn btn-xs btn-success" value='+row.REORDERSTATUS+' disabled>'+row.REORDERSTATUS+'</button>';
+                                        return '<button type="button" class="btn btn-xs btn-success" value=' + row.REORDERSTATUS + ' disabled>' + row.REORDERSTATUS + '</button>';
                                     }
                                 }
                             },
@@ -227,12 +229,11 @@ $todaysDate = date("m/d/y");
                                 "render": function (data, type, row, meta) {
                                     var isi = "<button class='btn btn-xs btn-default' onclick=Details('" + row.INV_ID + "')>DETAILS</button>  \n\
                                                     <button class='btn btn-xs btn-primary' onclick=History('" + row.INV_ID + "')>HISTORY</button>";
-                                                    
+
                                     return isi;
                                 }
                             }
                         ],
-                        
                 "drawCallback": function (settings) {
                     $('.initStockClass').editable({
                         validate: function (value) {
@@ -255,7 +256,7 @@ $todaysDate = date("m/d/y");
                             });
                         }
                     });
-                    
+
                     $('.initMinStockClass').editable({
                         validate: function (value) {
                             if ($.trim(value) == '') {
@@ -302,11 +303,12 @@ $todaysDate = date("m/d/y");
                 $.each(response.value1, function (key, value) {
 
                     content += "<tr>" +
-                                "<td class='text-center'>" + value.INPUT_DATE + "</td>" +
-                                "<td class='text-center'>" + value.INV_DESC + "</td>" +
-                                "<td class='text-center'>" + value.HIST_ADJUST + "</td>" +
-                                "<td class='text-center'>" + (value.HIST_ADJUST + " updated by : " + value.INPUT_SIGN) + "</td>" +
-                                "</tr>";
+                            "<td class='text-center'>" + value.INPUT_DATE + "</td>" +
+                            "<td class='text-center'>" + value.INV_DESC + "</td>" +
+                            "<td class='text-center'>" + value.HIST_ADJUST + "</td>" +
+                            "<td class='text-center'>" + value.HIST_TYPE + "</td>" +
+                            "<td class='text-center'>" + value.INPUT_SIGN + "</td>" +
+                            "</tr>";
                 });
                 $('#inv-id').text(response.value2);
                 $('#modal-table tbody').append(content);

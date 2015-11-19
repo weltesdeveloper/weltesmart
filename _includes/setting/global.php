@@ -45,6 +45,24 @@
                                 <input type="number" class="form-control" min="1" max="240" value="<?=$var1?>" id="timeout-duration">
                             </div><!-- /.input group -->
                     </div><!-- /.form group -->
+                    
+                    <div class="form-group">
+                        <label>Forecasting Method</label>
+                            <div class="input-group">
+                                <select class="selectpicker">
+                                    <option value="1">Specified Percent Over Last Weeks</option>
+                                    <option value="2">Calculated Percent Over Last Weeks</option>
+                                    <option value="3">Last Week to This Week</option>
+                                    <option value="4">Moving Average</option>
+                                    <option value="5">Weighted Moving Average</option>
+                                    <option value="6">Linear Approximation</option>
+                                    <option value="7">Least Square Regression</option>
+                                    <option value="8">Second Degree Approximation</option>
+                                    <option value="9">Linear Smoothing</option>
+                                    <option value="10">Exponential Smoothing With Trend & Seasonality</option>
+                                </select>
+                            </div><!-- /.input group -->
+                    </div><!-- /.form group -->
                 </div>
             </div>
             
@@ -57,5 +75,9 @@
         </div>
     </div>
 </section>
+
+<script>
+    $('.selectpicker').selectpicker();
+</script>
 
     

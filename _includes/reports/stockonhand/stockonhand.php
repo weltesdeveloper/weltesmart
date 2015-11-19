@@ -72,13 +72,10 @@ $todaysDate = date("m/d/y");
                     <table id="inventory-report-table" class="table table-bordered table-responsive table-striped">
                         <thead>
                             <tr>
-                                <th style="width: 7%">#</th>
+                                <th style="width: 7%">INV ID</th>
                                 <th>INVENTORY DESCRIPTION</th>
                                 <th class="text-center" style="width: 6%">UNIT</th>
                                 <th class="text-center" style="width: 10%">ON HAND</th>
-                                <th class="text-center" style="width: 10%">ON RESERVE</th>
-                                <th class="text-center" style="width: 10%">ON PO</th>
-                                <th class="text-center" style="width: 10%">MINIMUM STOCK</th>
                             </tr>
                         </thead>
                     </table>
@@ -105,5 +102,42 @@ $todaysDate = date("m/d/y");
                 window.open('../_includes/reports/stockonhand/process/inv_report_print_pdf.php?inv_id=' + inv_id);
             }
         });
+    });
+    
+    //GRAB JSON FROM ANOTHER FILE
+    function listInvJson(handleData) {
+        var invType = $('#inv-type-select option:selected').val();
+        return $.ajax({
+            type: "POST",
+            dataType: 'json',
+            url: "../_includes/inventory/process/process.php",
+            data: {invType: '%', "action": "load_data"},
+            success: function (json) {
+                handleData(json);
+            }
+        });
+    }
+    
+        //FEED JSON DATA TO DATATABLE
+    function feedToTable() {
+        listInvJson(function (response) {
+            var table = $('#inventory-report-table').DataTable({
+                destroy: true,
+                processing: true,
+                data: response,
+                pageLength: 15,
+                "columns":
+                [
+                    {"data": "INV_ID"},
+                    {"data": "INV_DESC"},
+                    {"data": "INV_UNIT", className: "text-center"},
+                    {"data": "INV_STK_QTY", className: "text-center"}
+                ]
+            });
+        });
+    }
+    
+    $(document).ready(function () {
+        feedToTable();
     });
 </script>

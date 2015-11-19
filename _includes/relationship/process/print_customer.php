@@ -1,7 +1,7 @@
-<!--<img src="../../../../_templates/img/mart_icon160x160-01.png" alt=""/>-->
-<!--<a href="../../../inventory/process/process.php"></a>-->
+
+<!--<a href="../../../_templates/plugins/tcpdf/tcpdf.php"></a>-->
 <?php
-require_once '../../../../_templates/plugins/tcpdf/tcpdf.php';
+require_once '../../../_templates/plugins/tcpdf/tcpdf.php';
 
 // extend TCPF with custom functions
 class MYPDF extends TCPDF {
@@ -16,8 +16,8 @@ class MYPDF extends TCPDF {
 //		}
 //		return $data;
             
-                $json = json_decode($data, true);
-                return $json;
+                $data = json_decode($file, true);
+                return $data;
 	}
 
 	// Colored table
@@ -26,7 +26,7 @@ class MYPDF extends TCPDF {
 		$this->SetFillColor(255, 0, 0);
 		$this->SetTextColor(255);
 		$this->SetDrawColor(128, 0, 0);
-		$this->SetLineWidth(0.3);
+		$this->SetLineWidth(0.1);
 		$this->SetFont('', 'B');
 		// Header
 		$w = array(40, 35, 40, 45);
@@ -99,10 +99,10 @@ $pdf->SetFont('helvetica', '', 12);
 $pdf->AddPage();
 
 // column titles
-$header = array('Country', 'Capital', 'Area (sq km)', 'Pop. (thousands)');
+$header = array('JOB', 'CLIENT ID', 'CLIENT NAME', 'CLIENT INITIAL');
 
 // data loading
-$data = $pdf->LoadData('../../../inventory/process/process.php');
+$data = $pdf->LoadData('process_customer.php');
 
 // print colored table
 $pdf->ColoredTable($header, $data);

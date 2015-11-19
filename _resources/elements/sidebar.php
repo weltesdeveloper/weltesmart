@@ -50,10 +50,6 @@
                 <li><a onclick="pr('CREATE_PR')" style="cursor: pointer;"><i class="fa fa-phone-square"></i> Create Purchase Requisition</a></li>
                 <li><a onclick="pr('LIST_PR')" style="cursor: pointer;"><i class="fa fa-server"></i> List Purchase Requisition</a></li>
                 <li><a onclick="pr('REV_PR')" style="cursor: pointer;"><i class="fa fa-server"></i> Revision Purchase Requisition</a></li>
-                <!--<li><a onclick="ordermanagement('CREATE_PO')" style="cursor: pointer;"><i class="fa fa-ship"></i> Create Purchase Order</a></li>-->
-                <!--<li><a onclick="ordermanagement('LIST_PO')" style="cursor: pointer;"><i class="fa fa-server"></i> List Purchase Order</a></li>-->
-                <!--<li><a onclick="ordermanagement('CREATE_SO')" style="cursor: pointer;"><i class="fa fa-cart-arrow-down"></i> Create Sales Order</a></li>-->
-                <!--<li><a onclick="ordermanagement('LIST_SO')" style="cursor: pointer;"><i class="fa fa-server"></i> List Sales Order</a></li>-->
             </ul>
         </li>
 
@@ -74,6 +70,7 @@
             </a>
             <ul class="treeview-menu">
                 <li><a onclick="report('STOCK_ON_HAND')" style="cursor: pointer;"><i class="fa fa-truck"></i> Stock On Hand</a></li>
+                <li><a onclick="report('CHECKOUT_SUMM')" style="cursor: pointer;"><i class="fa fa-sign-out"></i> Checkout Summary</a></li>
                 <li><a href="#"><i class="fa fa-bars"></i> Inventory Details</a></li>
                 <li><a href="#"><i class="fa fa-code-fork"></i> Tracker</a></li>
                 <li><a href="#"><i class="fa fa-hourglass-2"></i> Historical Summary</a></li>
@@ -106,7 +103,6 @@
                 <i class="fa fa-gear"></i> <span> My <?= $globalName ?></span> <i class="fa fa-angle-left pull-right"></i>
             </a>
             <ul class="treeview-menu">
-                <li><a href="#"><i class="fa fa-warning"></i> Minimum Stock Adjust</a></li>
                 <li><a onclick="setting('GLOBAL')" style="cursor: pointer;"><i class="fa fa-globe"></i> Global Setting</a></li>
                 <li><a onclick="setting('MASTER_INV')" style="cursor: pointer;"><i class="fa fa-cubes"></i> Master Inventory</a></li>
             </ul>
@@ -118,9 +114,6 @@
         <li><a href="#"><i class="fa fa-circle-o text-red"></i> <span>Important</span></a></li>
         <li><a href="#"><i class="fa fa-circle-o text-yellow"></i> <span>Warning</span></a></li>
         <li><a href="#"><i class="fa fa-circle-o text-aqua"></i> <span>Information</span></a></li>
-
-
-
     </ul>
 </section>
 <!-- /.sidebar -->

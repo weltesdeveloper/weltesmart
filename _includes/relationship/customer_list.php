@@ -24,6 +24,7 @@
                 <div class="box-header with-border">
                     <h3 class="box-title"><i class="fa fa-user-plus"></i><b>&nbsp;&nbsp;CUSTOMER DATA LIST</b> </h3>
                     <div class="box-tools pull-right">
+                        <button class="btn btn-xs btn-default" id="export-customer-report-pdf"><i class="fa fa-print"></i>&nbsp;PRINT CUSTOMER LIST IN PDF</button>
                         <!-- In box-tools add this button if you intend to use the contacts pane -->
                         <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                         <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
@@ -56,6 +57,21 @@
 </section>
 
 <script>
+    
+    $('#export-customer-report-pdf').on('click',function(e){
+        e.preventDefault();
+        $.ajax({
+            type: "POST",
+            processData: false,
+            contentType: "application/xml; charset=utf-8",
+            url : '../_includes/relationship/process/print_customer.php',
+            success : function(data)
+            {
+                window.open('../_includes/relationship/process/print_customer.php');
+            }
+        });
+    });
+    
     function listCustJson(handleData) {
         return $.ajax({
             type: "POST",
