@@ -96,47 +96,11 @@ $todaysDate = date("m/d/y");
             <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
             <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
         <![endif]-->
-    </head>
-    <body class="hold-transition skin-blue sidebar-mini fixed">
-        <!-- dialog window markup -->
-        <!--        <div id="dialog" title="Your session is about to expire!">
-        <?php // $idleCount = SingleQryFld("SELECT WMS.SETTING_VALUE FROM MART_SETTINGS WMS WHERE WMS.SETTING_DESC = 'SESSION_TIMEOUT'", $conn) ?>
-                    <input type="number" value="<?php // echo $idleCount;  ?>" hidden="" id="idle-value">
-                    <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 50px 0;"></span>
-                        You will be logged off in <span id="dialog-countdown" style="font-weight:bold"></span> seconds.
-                    </p>
-                    <p>Do you want to continue your session?</p>
-                </div>-->
-
-        <div class="wrapper">
-            <header class="main-header">
-                <?php include 'elements/header.php'; ?>
-            </header>
-
-            <!-- Left side column. contains the logo and sidebar -->
-            <aside class="main-sidebar">
-                <?php include 'elements/sidebar.php'; ?>
-            </aside>
-
-            <!-- Content Wrapper. Contains page content -->
-            <div class="content-wrapper" id="maincontent">
-                <?php include 'elements/mainpage.php'; ?>
-            </div><!-- /.content-wrapper -->
-
-            <!-- Control Sidebar -->
-            <aside class="control-sidebar control-sidebar-dark">
-                <?php include 'elements/control_sidebar.php'; ?>
-            </aside><!-- /.control-sidebar -->
-            <!-- Add the sidebar's background. This div must be placed
-                 immediately after the control sidebar -->
-            <div class="control-sidebar-bg"></div>
-
-        </div><!-- ./wrapper -->
-
+        
         <!-- jQuery 2.1.4 -->
         <script src="../_templates/plugins/jQuery/jQuery-2.1.4.min.js"></script>
         <!-- jQuery UI 1.11.4 -->
-    <!--    <script src="../_templates/plugins/jQueryUI/jquery-ui.min.js" type="text/javascript"></script>-->
+        <script src="../_templates/plugins/jQueryUI/jquery-ui.min.js" type="text/javascript"></script>
         <script src="../_templates/plugins/jquery-ui-1.11.4/jquery-ui.min.js" type="text/javascript"></script>
         <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
 
@@ -144,7 +108,7 @@ $todaysDate = date("m/d/y");
         <script src="../_templates/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
         <!-- Morris.js charts -->
         <script src="../_templates/plugins/raphael_2.1.4.js" type="text/javascript"></script>
-        <script src="../_templates/plugins/silviomoreto-bootstrap-select-a8ed49e/dist/js/bootstrap-select.min.js"></script>
+        <script src="../_templates/plugins/silviomoreto-bootstrap-select-a8ed49e/dist/js/bootstrap-select.js"></script>
         <script src="../_templates/plugins/morris/morris.min.js" type="text/javascript"></script>
         <!-- Sparkline -->
         <script src="../_templates/plugins/sparkline/jquery.sparkline.min.js" type="text/javascript"></script>
@@ -186,11 +150,50 @@ $todaysDate = date("m/d/y");
         <script src="../_templates/plugins/sweetalert-master/dist/sweetalert.min.js"></script>
         <script src="../_templates/plugins/iCheck/icheck.min.js" type="text/javascript"></script>
         <!-- INPUT MASK -->
-        <script src="../_templates/plugins/input-mask/jquery.inputmask.js" type="text/javascript"></script>\
+        <script src="../_templates/plugins/input-mask/jquery.inputmask.js" type="text/javascript"></script>
         <!-- SWITCHERY -->
         <script src="../_templates/plugins/switchery-master/dist/switchery.js" type="text/javascript"></script>
         <script>
             $.widget.bridge('uibutton', $.ui.button);
         </script>
+    </head>
+    <body class="hold-transition skin-blue sidebar-mini fixed">
+        <!-- dialog window markup -->
+        <!--        <div id="dialog" title="Your session is about to expire!">
+        <?php // $idleCount = SingleQryFld("SELECT WMS.SETTING_VALUE FROM MART_SETTINGS WMS WHERE WMS.SETTING_DESC = 'SESSION_TIMEOUT'", $conn) ?>
+                    <input type="number" value="<?php // echo $idleCount;  ?>" hidden="" id="idle-value">
+                    <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 50px 0;"></span>
+                        You will be logged off in <span id="dialog-countdown" style="font-weight:bold"></span> seconds.
+                    </p>
+                    <p>Do you want to continue your session?</p>
+                </div>-->
+
+        <div class="wrapper">
+            <header class="main-header">
+                <?php include 'elements/header.php'; ?>
+            </header>
+
+            <!-- Left side column. contains the logo and sidebar -->
+            <aside class="main-sidebar">
+                <?php include 'elements/sidebar.php'; ?>
+            </aside>
+
+            <!-- Content Wrapper. Contains page content -->
+            <div class="content-wrapper" id="maincontent">
+                <?php include 'elements/mainpage.php'; ?>
+            </div><!-- /.content-wrapper -->
+
+            <!-- Control Sidebar -->
+            <aside class="control-sidebar control-sidebar-dark">
+                <?php include 'elements/control_sidebar.php'; ?>
+            </aside><!-- /.control-sidebar -->
+            <!-- Add the sidebar's background. This div must be placed
+                 immediately after the control sidebar -->
+            <div class="control-sidebar-bg"></div>
+
+        </div><!-- ./wrapper -->
+
+        
+        
     </body>
 </html>

@@ -15,13 +15,4 @@
     <meta name="msapplication-TileImage" content="_templates/img/ms-icon-144x144.png">
     <meta name="theme-color" content="#ffffff">
 
-<?php
-
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-    @include '_resources/login.php'; 
-?>
+<?php include '_resources/login.php'; 

@@ -11,7 +11,7 @@
             <div class="box box-solid box-default">
                 <div class="box-header with-border">
                     <h3 class="box-title"><b>INSTANT CHECKOUT</b> ~ Auto Generated Warehouse Receipt #</h3> : 
-                    <b><a href="#" id="wh-receipt"></a></b>
+                    <b><span id="wh-receipt"></span></b>
                     <div class="box-tools pull-right">
                         <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                     </div>
@@ -31,11 +31,11 @@
                         </div>
                         <div class="col-md-4 col-xs-4 col-lg-4">
                             <label class="control-label">JOB</label>
-                            <select class="selectpicker" data-width="100%" id="job" onchange="ChangeJob();"></select>
+                            <select class="selectpicker" data-width="100%" id="job" onchange="ChangeJob();" data-live-search="true"></select>
                         </div>
                         <div class="col-md-4 col-xs-4 col-lg-4">
                             <label class="control-label">SUBJOB</label>
-                            <select class="selectpicker" data-width="100%" id="subjob"></select>
+                            <select class="selectpicker" data-width="100%" id="subjob" data-live-search="true"></select>
                         </div>
                     </div>
                     <div class="row">
@@ -94,7 +94,7 @@
             <div class="box box-solid box-default">
                 <div class="box-header with-border">
                     <h3 class="box-title"><b>Check Out Item</b></h3> : 
-                    <b><a href="#" id="wh-receipt" data-type="text" data-pk="1" data-url="/post" data-title="Enter New Warehouse #">WEN-WH-JOB-SUBJOB-000001</a></b>
+                    <!--<b><a href="#" id="wh-receipt" data-type="text" data-pk="1" data-url="/post" data-title="Enter New Warehouse #">WEN-WH-JOB-SUBJOB-000001</a></b>-->
                     <div class="box-tools pull-right">
                         <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                     </div>
@@ -105,10 +105,11 @@
                             <table id="inv-checkout-table" class="table table-condensed" cellspacing="0" width="100%">
                                 <thead>
                                     <tr>
-                                        <th style="width: 50%;" >INVENTORY</th>
-                                        <th>QUANTITY</th>
-                                        <th>REMARKS</th>
-                                        <th style="width: 6%;">DELETE</th>
+                                        <th class="text-center" style="width: 50%;" >INVENTORY</th>
+                                        <th class="text-center" style="width: 10%;">MAX STOCK QTY</th>
+                                        <th class="text-center">QUANTITY</th>
+                                        <th class="text-center">REMARKS</th>
+                                        <th class="text-center" style="width: 6%;">DELETE</th>
                                     </tr>
                                 </thead>
                             </table>
@@ -126,10 +127,11 @@
         <div class="col-md-12 col-xs-12 col-lg-12">
             <button class="btn btn-block btn-success" id="submit-checkout" onclick="SubmitBonGudang();">SUBMIT</button>
         </div>
-<!--        <div class="col-md-6 col-xs-6 col-lg-6">
-            <button class="btn btn-block btn-success" id="submit-checkout">SUBMIT & PRINT</button>
-        </div>-->
+        <!--        <div class="col-md-6 col-xs-6 col-lg-6">
+                    <button class="btn btn-block btn-success" id="submit-checkout">SUBMIT & PRINT</button>
+                </div>-->
     </div>
 
 </section>
+
 <script src="../_includes/checkout/js/controller.js" type="text/javascript"></script>

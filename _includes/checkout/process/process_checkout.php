@@ -34,8 +34,8 @@ switch ($_POST['action']) {
         }
         $query = SingleQryFld("SELECT MAX(MART_WR_ID) FROM MART_MST_CHKOUT WHERE MART_WR_JOB = '$job'", $conn);
         $nomer = 0;
-        if ($query != "") {
-            $nomer = str_replace("WM-WH-$job", "", $query);
+        if ($query != "null") {
+            $nomer = str_replace("WM-WH-$job-", "", $query);
             $nomer = intval($nomer) + 1;
         } else {
             $nomer = intval($nomer) + 1;
@@ -63,7 +63,7 @@ switch ($_POST['action']) {
         $tanggal = $_POST['tanggal'];
         $job = $_POST['job'];
         $subjob = $_POST['subjob'];
-        $pembawa = $_POST['pembawa'];
+        $pembawa = str_replace("'", "''", $_POST['pembawa']) ;
         $spv = $_POST['spv'];
         $manager = $_POST['manager'];
         $inv_id = $_POST['inv_id'];
@@ -97,9 +97,9 @@ switch ($_POST['action']) {
                 $inv_id_ = $inv_id[$i];
                 $qty_ = $qty[$i] * -1;
                 $sign_ = $username;
-                $type_ = "CHECKOUT ON $wh_id";
-                $adjustSql = "INSERT INTO MART_STK_ADJ_HIST(INV_ID, HIST_ADJUST, INPUT_SIGN, INPUT_DATE, HIST_TYPE) "
-                        . "VALUES('$inv_id_', '$qty_', '$sign_', SYSDATE, '$type_')";
+                $type_ = "OUT";
+                $adjustSql = "INSERT INTO MART_STK_ADJ_HIST(INV_ID, HIST_ADJUST, INPUT_SIGN, INPUT_DATE, HIST_TYPE, PROPERTIES) "
+                        . "VALUES('$inv_id_', '$qty_', '$sign_', SYSDATE, '$type_', '$wh_id')";
                 $adjustParse = oci_parse($conn, $adjustSql);
                 $adjust = oci_execute($adjustParse);
                 if ($adjust) {
@@ -129,6 +129,18 @@ switch ($_POST['action']) {
             oci_rollback($conn);
             echo "GAGAL";
         }
+        break;
+
+    case "check_max":
+        $inv_id = $_POST['inv_id'];
+        $sql = "SELECT INV_STK_QTY FROM MART_STK_ADJ WHERE INV_ID = '$inv_id'";
+        $parse = oci_parse($conn, $sql);
+        oci_execute($parse);
+        $response = array();
+        while ($row1 = oci_fetch_array($parse)) {
+            array_push($response, $row1);
+        }
+        echo json_encode($response);
         break;
     default:
         break;

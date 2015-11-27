@@ -46,7 +46,7 @@ function ChangeJob() {
                 option += "<option value=" + value.PROJECT_NAME_NEW + ">" + value.PROJECT_NAME_NEW + "</option>";
             });
             $('#subjob').selectpicker().append(option);
-            $('#wh-receipt').html(response.wh_id);
+            $('#wh-receipt').text(response.wh_id);
         },
         complete: function (jqXHR, textStatus) {
             $('#subjob').selectpicker().selectpicker('refresh');
@@ -56,8 +56,9 @@ function ChangeJob() {
 
 function AddItem() {
     var newTargetRow = cons_checkout_table.fnAddData([
-        "<select class='selectpicker' data-id='item-name' data-live-search='true' data-width='100%' title='Select Inventory...' id='inventory-detail-drop" + counter + "'></select>",
-        "<input type='number' class='form-control' style='width: -moz-available;' value='1' min='0'/>",
+        "<select class='selectpicker' data-live-search='true' data-width='100%' title='Select Inventory...' id='inventory-detail-drop" + counter + "' onchange=ChangeInventory('" + counter + "')></select>",
+        "<span id='max" + counter + "'></span>",
+        "<input type='number' class='form-control' style='width: -moz-available;' value='1' min='0' id='qty" + counter + "' onchange=ChangeQty('" + counter + "')>",
         "<input type='text' class='form-control' style='width: -moz-available;'/></div>",
         "<i class='fa fa-trash fa-fw fa-lg text-danger' style='cursor: pointer;' onclick=DeleteItem(" + counter + ")></i>"
     ]);
@@ -72,6 +73,7 @@ function AddItem() {
     $('td', nTr)[1].setAttribute('class', 'text-center');
     $('td', nTr)[2].setAttribute('class', 'text-center');
     $('td', nTr)[3].setAttribute('class', 'text-center');
+    $('td', nTr)[4].setAttribute('class', 'text-center');
     $('.selectpicker').selectpicker();
 
     $('#inventory-detail-drop' + counter).each(function (index, value)
@@ -118,9 +120,11 @@ function SubmitBonGudang() {
     var remark = [];
     var rows = $('#inv-checkout-table').dataTable().fnGetNodes();
     for (var x = 0; x < rows.length; x++) {
-        inv_id.push($(rows[x]).find("td:eq(0)").find("select").val());
-        qty.push($(rows[x]).find("td:eq(1)").find("input").val());
-        remark.push($(rows[x]).find("td:eq(2)").find("input").val());
+        if ($(rows[x]).find("td:eq(0)").find("select").val() != "") {
+            inv_id.push($(rows[x]).find("td:eq(0)").find("select").val());
+            qty.push($(rows[x]).find("td:eq(2)").find("input").val());
+            remark.push($(rows[x]).find("td:eq(3)").find("input").val());
+        }
     }
 
     var sentReq = {
@@ -134,7 +138,7 @@ function SubmitBonGudang() {
         inv_id: inv_id,
         qty: qty,
         remark: remark,
-        rem:rem,
+        rem: rem,
         action: "submit_data"
     };
 
@@ -171,4 +175,33 @@ function SubmitBonGudang() {
             return false;
         }
     }
+}
+
+function ChangeInventory(param) {
+    var inv_id = $('#inventory-detail-drop' + param).val();
+    console.log(inv_id);
+    $.ajax({
+        type: 'POST',
+        url: "../_includes/checkout/process/process_checkout.php",
+        data: {action: "check_max", inv_id: inv_id},
+        dataType: "JSON",
+        success: function (response, textStatus, jqXHR) {
+            if (response[0].INV_STK_QTY == 0) {
+                $('#qty' + param).val("0");
+
+            } else {
+                $('#qty' + param).removeAttr("max").attr("max", response[0].INV_STK_QTY);
+            }
+            $('#max' + param).text(response[0].INV_STK_QTY);
+        }
+    });
+}
+
+function ChangeQty(param) {
+    var qty = $('#qty' + param);
+    var value = parseInt(qty.val());
+    var max = parseInt(qty.attr("max"));
+    if (value > max || isNaN(value) || value < 0)
+        $('#qty' + param).val("0");
+
 }

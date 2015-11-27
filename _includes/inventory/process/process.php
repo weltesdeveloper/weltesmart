@@ -48,8 +48,8 @@ switch ($_POST['action']) {
                 $last_value = SingleQryFld("SELECT NVL(INV_STK_QTY,0) FROM MART_STK_ADJ WHERE INV_ID = '$inv_id'", $conn);
                 $selisih = $value - $last_value;
 
-                $insertHistSql = "INSERT INTO MART_STK_ADJ_HIST(INV_ID, HIST_ADJUST, INPUT_SIGN, INPUT_DATE, HIST_TYPE) "
-                        . "VALUES('$inv_id', '$selisih', '$username', SYSDATE, 'DIRECT ADJUST')";
+                $insertHistSql = "INSERT INTO MART_STK_ADJ_HIST(INV_ID, HIST_ADJUST, INPUT_SIGN, INPUT_DATE, HIST_TYPE, PROPERTIES) "
+                        . "VALUES('$inv_id', '$selisih', '$username', SYSDATE, 'ADJUST', 'MANUAL')";
                 $insertHistParse = oci_parse($conn, $insertHistSql);
                 $insertHist = oci_execute($insertHistParse);
                 if ($insertHist) {
@@ -106,7 +106,8 @@ switch ($_POST['action']) {
                 . "MSA.HIST_ADJUST, "
                 . "MSA.INPUT_SIGN, "
                 . "MI.INV_DESC,"
-                . "MSA.HIST_TYPE "
+                . "MSA.HIST_TYPE,"
+                . "MSA.PROPERTIES "
                 . "FROM MART_STK_ADJ_HIST MSA "
                 . "INNER JOIN MASTER_INV@WELTESMART_WENLOGINV_LINK MI "
                 . "ON MI.INV_ID = MSA.INV_ID "
@@ -136,6 +137,14 @@ switch ($_POST['action']) {
             array_push($array, $row1);
         }
         echo json_encode($array);
+        break;
+
+    case "select_inv":
+        $invtype = $_POST['invType'];
+
+        $query2 = "SELECT MSI.* FROM MART_STOCK_INFO MSI WHERE MSI.INV_TYPE LIKE '$invtype' ORDER BY MSI.INV_DESC ASC";
+
+        $sql = oci_parse($conn, $query2);
         break;
     default:
         break;

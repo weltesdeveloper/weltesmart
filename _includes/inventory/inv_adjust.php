@@ -41,7 +41,9 @@ $todaysDate = date("m/d/y");
 
                     while ($row = oci_fetch_array($invCatParse)) {
                         ?>
-                        <option value='<?php echo $row['INV_TYPE']; ?>'><?php echo $row['INV_TYPE']; ?></option>
+                        <option value='<?php echo $row['INV_TYPE']; ?>'>
+                            <?php echo $row['INV_TYPE']; ?>
+                        </option>
                         <?php
                     }
                     ?>
@@ -73,10 +75,13 @@ $todaysDate = date("m/d/y");
                         <thead>
                             <tr>
                                 <th style="width: 7%">ID</th>
+                                <th style="width: 7%">QR</th>
                                 <th>DESCRIPTION</th>
-                                <th class="text-center" style="width: 6%">UNIT</th>
+                                <th class="text-center" style="width: 6%">UNIT</th> 
                                 <th class="text-center" style="width: 10%">ON HAND</th>
-                                <th class="text-center" style="width: 10%">MINIMUM STOCK</th>
+                                <th class="text-center" style="width: 10%">MIN</th>
+                                <th class="text-center" style="width: 10%">MAX</th>
+                                <th class="text-center" style="width: 10%">SAFE</th>
                                 <th class="text-center" style="width: 10%">STOCK STATUS</th>
                                 <th class="text-center" style="width: 16%">DETAILS/ACTIONS</th>
                             </tr>
@@ -103,18 +108,19 @@ $todaysDate = date("m/d/y");
                                 <tr>
                                     <th class="text-center">DATE</th>
                                     <th class="text-center">INV DESC</th>
-                                    <th class="text-center">LOG</th>
-                                    <th class="text-center">REMARK</th>
+                                    <th class="text-center">IN</th>
+                                    <th class="text-center">OUT</th>
+                                    <th class="text-center">TYPE</th>
+                                    <th class="text-center">PROPERTIES</th>
                                     <th class="text-center">SIGN</th>
                                 </tr>
                             </thead>
                             <tfoot>
                                 <tr>
-                                    <th class="text-center">DATE</th>
-                                    <th class="text-center">INV DESC</th>
-                                    <th class="text-center">LOG</th>
-                                    <th class="text-center">REMARK</th>
-                                    <th class="text-center">SIGN</th>
+                                    <th class="text-center" colspan="2">SUMMARY</th>
+                                    <th class="text-center" id="in"></th>
+                                    <th class="text-center" id="out"></th>
+                                    <th class="text-center" id="jumlah" colspan="3" style="background-color: activecaption"></th>
                                 </tr>
                             </tfoot>
                             <tbody>
@@ -131,242 +137,16 @@ $todaysDate = date("m/d/y");
         <!-- END MODAL BOOTSTRAP -->    
 
         <!-- ITEM DETAILS MODAL -->
-        <div class="modal modal-default fade" id="inv-detail-modal" role="dialog">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title text-center">Inventory Details For 
-                            <span id="inv-id-details"></span>
-                        </h4>
-                    </div>
-                    <div class="modal-body">
-
-                    </div>
-                </div>
-            </div>
-        </div>
+        <div id="modalDetails">tes</div>
+        
+        <!-- ITEM DETAILS MODAL QR CODE-->
+        <div id="modalDetailsQrCode">tes</div>
+      
         <!-- END ITEM DETAILS MODAL -->
 
     </div>
+
+
 </section>
-<script>
-    $('.selectpicker').selectpicker();
 
-    $('#showInvButton').on('click', function () {
-        feedToTable();
-    });
-
-    //GRAB JSON FROM ANOTHER FILE
-    function listCompJson(handleData) {
-        var invType = $('#inv-type-select option:selected').val();
-        return $.ajax({
-            type: "POST",
-            dataType: 'json',
-            url: "../_includes/inventory/process/process.php",
-            data: {invType: invType, "action": "load_data"},
-            success: function (json) {
-                handleData(json);
-            }
-        });
-    }
-
-    //FEED JSON DATA TO DATATABLE
-    function feedToTable() {
-        listCompJson(function (response) {
-            var initMinStock = 0;
-            var idNO = 0;
-            var table = $('#inventory-adjust-table').DataTable({
-                destroy: true,
-                processing: true,
-                data: response,
-                pageLength: 15,
-                "columns":
-                        [
-                            {"data": "INV_ID"},
-                            {"data": "INV_DESC"},
-                            {"data": "INV_UNIT", className: "text-center"}
-                        ],
-                "columnDefs":
-                        [
-                            {
-                                "orderable": true,
-                                "visible": true,
-                                "targets": [3],
-                                "className": 'text-center',
-                                "render": function (data, type, row, meta) {
-                                    var isi = '<a data-type="number" style="cursor:pointer" class="initStockClass text-center" data-pk="' + row.INV_ID + '">' + row.INV_STK_QTY + '</a>';
-                                    return isi;
-                                }
-                            },
-                            {
-                                "visible": true,
-                                "targets": [4],
-                                "className": 'text-center',
-                                "render": function (data, type, row, meta) {
-                                    var isi = '<a data-type="number" style="cursor:pointer" class="initMinStockClass" data-pk="' + row.INV_ID + '">' + row.INV_STK_MIN + '</a>';
-                                    return isi;
-                                }
-                            },
-                            {
-                                "visible": true,
-                                "targets": [5],
-                                "className": 'text-center',
-                                "render": function (data, type, row, meta) {
-                                    if (row.REORDERSTATUS == 'NOT SET') {
-                                        return '<button type="button" class="btn btn-xs btn-warning" value=' + row.REORDERSTATUS + ' disabled>' + row.REORDERSTATUS + '</button>';
-                                    } else if (row.REORDERSTATUS == 'NEED TO REORDER') {
-                                        return '<button type="button" class="btn btn-xs btn-danger" value=' + row.REORDERSTATUS + ' onclick=ordermanagement("CREATE_PR")>' + row.REORDERSTATUS + '</button>';
-                                    } else {
-                                        return '<button type="button" class="btn btn-xs btn-success" value=' + row.REORDERSTATUS + ' disabled>' + row.REORDERSTATUS + '</button>';
-                                    }
-                                }
-                            },
-                            {
-                                "targets": [6],
-                                "data": null,
-                                "className": 'text-center',
-                                "render": function (data, type, row, meta) {
-                                    var isi = "<button class='btn btn-xs btn-default' onclick=Details('" + row.INV_ID + "')>DETAILS</button>  \n\
-                                                    <button class='btn btn-xs btn-primary' onclick=History('" + row.INV_ID + "')>HISTORY</button>";
-
-                                    return isi;
-                                }
-                            }
-                        ],
-                "drawCallback": function (settings) {
-                    $('.initStockClass').editable({
-                        validate: function (value) {
-                            if ($.trim(value) == '') {
-                                return 'This field is required';
-                            }
-                        },
-                        success: function (response, newValue) {
-                            console.log(newValue);
-                            var element = $(this);
-                            var inv_id = element.data("pk");
-                            console.log(inv_id);
-                            $.ajax({
-                                type: 'POST',
-                                data: {inv_id: inv_id, value: newValue, type: "adjust_stock", "action": "update_data"},
-                                url: "../_includes/inventory/process/process.php",
-                                success: function (response, textStatus, jqXHR) {
-                                    alert(response);
-                                }
-                            });
-                        }
-                    });
-
-                    $('.initMinStockClass').editable({
-                        validate: function (value) {
-                            if ($.trim(value) == '') {
-                                return 'This field is required';
-                            }
-                        },
-                        success: function (response, newValue) {
-                            console.log(newValue);
-                            var element = $(this);
-                            var inv_id = element.data("pk");
-                            console.log(inv_id);
-                            $.ajax({
-                                type: 'POST',
-                                data: {inv_id: inv_id, value: newValue, type: "adjust_min", "action": "update_data"},
-                                url: "../_includes/inventory/process/process.php",
-                                success: function (response, textStatus, jqXHR) {
-                                    alert(response);
-                                }
-                            });
-                        }
-                    });
-                },
-                "fnCreatedRow": function (nRow, aData, iDataIndex) {
-                    $(nRow).attr('id', 'row' + idNO);
-                    idNO++;
-                }
-            });
-        });
-    }
-
-    function History(param) {
-        $('#myModal').modal('show');
-        $.ajax({
-            type: 'POST',
-            url: "../_includes/inventory/process/process.php",
-            dataType: "JSON",
-            data: {inv_id: param, "action": "show_history"},
-            beforeSend: function (xhr) {
-                $('#modal-table').DataTable().destroy();
-                $('#modal-table tbody').empty();
-            },
-            success: function (response, textStatus, jqXHR) {
-                var content = "";
-                $.each(response.value1, function (key, value) {
-
-                    content += "<tr>" +
-                            "<td class='text-center'>" + value.INPUT_DATE + "</td>" +
-                            "<td class='text-center'>" + value.INV_DESC + "</td>" +
-                            "<td class='text-center'>" + value.HIST_ADJUST + "</td>" +
-                            "<td class='text-center'>" + value.HIST_TYPE + "</td>" +
-                            "<td class='text-center'>" + value.INPUT_SIGN + "</td>" +
-                            "</tr>";
-                });
-                $('#inv-id').text(response.value2);
-                $('#modal-table tbody').append(content);
-            },
-            complete: function () {
-                initModalTableProp();
-            }
-        });
-    }
-
-    function Details(param) {
-        $.ajax({
-            type: 'POST',
-            url: "../_includes/inventory/process/process.php",
-            dataType: "JSON",
-            data: {inv_id: param, "action": "show_qr"},
-            success: function (response, textStatus, jqXHR) {
-                $('#inv-detail-modal .modal-body').qrcode({
-                    "render": "div",
-                    "size": 100,
-                    "text": response[0].INV_DESC
-                });
-                $('#inv-id-details').text(response[0].INV_DESC);
-                $('#inv-detail-modal').modal('show');
-            }
-        });
-    }
-
-    function initModalTableProp() {
-        $('#modal-table').DataTable({
-            "bInfo": false,
-            "bPaginate": false,
-            "bFilter": false,
-            initComplete: function () {
-                this.api().columns().every(function () {
-                    var column = this;
-                    var select = $('<select><option value=""></option></select>')
-                            .appendTo($(column.footer()).empty())
-                            .on('change', function () {
-                                var val = $.fn.dataTable.util.escapeRegex(
-                                        $(this).val()
-                                        );
-
-                                column
-                                        .search(val ? '^' + val + '$' : '', true, false)
-                                        .draw();
-                            });
-
-                    column.data().unique().sort().each(function (d, j) {
-                        select.append('<option value="' + d + '">' + d + '</option>')
-                    });
-                });
-            }
-        });
-    }
-
-    $(document).ready(function () {
-        feedToTable();
-    });
-
-</script>
+<script src="../_includes/inventory/pages/js/controller.js" type="text/javascript"></script>

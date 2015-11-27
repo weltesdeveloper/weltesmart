@@ -21,15 +21,16 @@ $todaysDate = date("m/d/y");
                     <div class="input-group-addon">
                         <i class="fa fa-calendar"></i>
                     </div>
-                  <input type="text" class="form-control pull-right" id="period-stock-on-hand">
+                    <input type="text" class="form-control pull-right" id="period-stock-on-hand">
                 </div><!-- /.input group -->
             </div><!-- /.form group -->
         </div>
         <div class="col-md-9 col-xs-9 col-lg-9">
             <div class="input-group input-group-sm">
                 <select class="selectpicker form-control" data-live-search='true' multiple title="Select Single or Multiple Categories" data-size="auto" data-style="btn-primary" id='inv-type-select'>
+                    <option value="%" selected="">ALL</option>
                     <?php
-                    $invCatParse = oci_parse($conn, "SELECT DISTINCT MI.INV_TYPE FROM MASTER_INV@WELTESMART_WENLOGINV_LINK MI WHERE MI.INV_CAT = 'CONSUMABLE' ORDER BY MI.INV_TYPE ASC");
+                    $invCatParse = oci_parse($conn, "SELECT DISTINCT MI.INV_TYPE FROM MASTER_INV@WELTESMART_WENLOGINV_LINK MI WHERE MI.INV_WM_SELECT = '1' ORDER BY MI.INV_TYPE ASC");
                     $invExcErr = oci_execute($invCatParse);
                     if (!$invExcErr) {
                         $e = oci_error($invCatParse);
@@ -48,12 +49,12 @@ $todaysDate = date("m/d/y");
                     ?>
                 </select>
                 <span class="input-group-btn">
-                    <button class="btn btn-success" type="button" id='showInvButton'>Show Inventory</button>
+                    <button class="btn btn-success" type="button" id='showInvButton' onclick="ShowInv();">Show Inventory</button>
                 </span>
             </div><!-- /input-group -->
         </div>
     </div>
-    
+
     <div class="row">
         <div class="col-md-12 col-xs-12 col-lg-12">
             <div class="box box-default box-solid">
@@ -88,56 +89,61 @@ $todaysDate = date("m/d/y");
 <script>
     $('#period-stock-on-hand').daterangepicker();
     $('#inv-type-select').selectpicker();
-    
-    $('#export-inv-report-pdf').on('click',function(e){
+
+    $('#export-inv-report-pdf').on('click', function (e) {
         var inv_id = $(this).val();
         e.preventDefault();
         $.ajax({
             type: "POST",
             processData: false,
             contentType: "application/xml; charset=utf-8",
-            url : '../_includes/reports/stockonhand/process/inv_report_print_pdf.php',
-            success : function(data)
+            url: '../_includes/reports/stockonhand/process/inv_report_print_pdf.php',
+            success: function (data)
             {
                 window.open('../_includes/reports/stockonhand/process/inv_report_print_pdf.php?inv_id=' + inv_id);
             }
         });
     });
-    
-    //GRAB JSON FROM ANOTHER FILE
-    function listInvJson(handleData) {
-        var invType = $('#inv-type-select option:selected').val();
-        return $.ajax({
+
+    function FirstLoad() {
+        $.ajax({
             type: "POST",
             dataType: 'json',
             url: "../_includes/inventory/process/process.php",
             data: {invType: '%', "action": "load_data"},
-            success: function (json) {
-                handleData(json);
+            success: function (response) {
+                var table = $('#inventory-report-table').DataTable({
+                    destroy: true,
+                    processing: true,
+                    data: response,
+                    pageLength: 15,
+                    "columns":
+                            [
+                                {"data": "INV_ID"},
+                                {"data": "INV_DESC"},
+                                {"data": "INV_UNIT", className: "text-center"},
+                                {"data": "INV_STK_QTY", className: "text-center"}
+                            ]
+                });
             }
         });
     }
-    
-        //FEED JSON DATA TO DATATABLE
-    function feedToTable() {
-        listInvJson(function (response) {
-            var table = $('#inventory-report-table').DataTable({
-                destroy: true,
-                processing: true,
-                data: response,
-                pageLength: 15,
-                "columns":
-                [
-                    {"data": "INV_ID"},
-                    {"data": "INV_DESC"},
-                    {"data": "INV_UNIT", className: "text-center"},
-                    {"data": "INV_STK_QTY", className: "text-center"}
-                ]
-            });
+
+    function ShowInv() {
+        var inv_type = $('#inv-type-select').val();
+        console.log(inv_type);
+        $.ajax({
+            type: 'POST',
+            data: {invType: inv_type, "action": "select_inv"},
+            url: "../_includes/reports/stockonhand/process/process_stockhand.php",
+            success: function (response, textStatus, jqXHR) {
+                console.log(response);
+            }
         });
     }
-    
+
+
     $(document).ready(function () {
-        feedToTable();
+        FirstLoad();
     });
 </script>
