@@ -134,7 +134,7 @@ $var1 = SingleQryFld($var1sql, $conn);
     });
 
     function UpdateData(param) {
-        var location = $('#location'+param).val();
+        var location = $('#location' + param).val();
         var file = $('#img' + param)[0].files[0];
         var formData = new FormData();
         formData.append('file', file);
@@ -150,9 +150,9 @@ $var1 = SingleQryFld($var1sql, $conn);
             cache: false,
             processData: false,
             success: function (response, textStatus, jqXHR) {
-                if(response != ""){
+                if (response != "") {
                     alert(response);
-                }else{
+                } else {
                     alert("SUKSES INSERT");
                 }
             }
