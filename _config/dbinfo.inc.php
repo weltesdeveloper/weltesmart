@@ -5,6 +5,12 @@
     define("ORA_CON_PW", "weltespass");
     define("ORA_CON_DB", "192.168.100.195/WENMART");
     
+    define("ORA_CON_DB2", "192.168.100.195/WENLOGINV");
+    
+    
+    $conn_wenloginv = oci_connect(ORA_CON_UN, ORA_CON_PW, ORA_CON_DB2) or die;
+    
+    
    /*$con = oci_connect(ORA_CON_UN, ORA_CON_PW, ORA_CON_DB);
     if($con)
         echo 'success';

@@ -57,6 +57,8 @@ $todaysDate = date("m/d/y");
 
         <!-- Bootstrap 3.3.5 -->
         <link href="../_templates/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+        <!--Select 2-->
+        <link href="../_templates/select2/css/select2.min.css" rel="stylesheet" type="text/css">
         <!-- Font Awesome -->
         <link href="../_templates/plugins/font-awesome-4.4.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
         <!-- Ionicons -->
@@ -90,20 +92,22 @@ $todaysDate = date("m/d/y");
         <link href="../_templates/plugins/sweetalert-master/dist/sweetalert.css" rel="stylesheet" type="text/css">
         <!-- SWITCHERY -->
         <link href="../_templates/plugins/switchery-master/dist/switchery.min.css" rel="stylesheet" type="text/css"/>
+        <link href="../_templates/plugins/boostrap-fileinput/css/fileinput.min.css" rel="stylesheet" type="text/css">
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
         <!--[if lt IE 9]>
             <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
             <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
         <![endif]-->
-        
+
         <!-- jQuery 2.1.4 -->
         <script src="../_templates/plugins/jQuery/jQuery-2.1.4.min.js"></script>
         <!-- jQuery UI 1.11.4 -->
         <script src="../_templates/plugins/jQueryUI/jquery-ui.min.js" type="text/javascript"></script>
         <script src="../_templates/plugins/jquery-ui-1.11.4/jquery-ui.min.js" type="text/javascript"></script>
         <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
-
+        <!--Select 2 Plugin-->
+        <script src="../_templates/select2/js/select2.min.js"></script>
         <!-- Bootstrap 3.3.5 -->
         <script src="../_templates/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
         <!-- Morris.js charts -->
@@ -153,6 +157,8 @@ $todaysDate = date("m/d/y");
         <script src="../_templates/plugins/input-mask/jquery.inputmask.js" type="text/javascript"></script>
         <!-- SWITCHERY -->
         <script src="../_templates/plugins/switchery-master/dist/switchery.js" type="text/javascript"></script>
+        <!--FileInput-->
+        <script src="../_templates/plugins/boostrap-fileinput/js/fileinput.min.js"></script>
         <script>
             $.widget.bridge('uibutton', $.ui.button);
         </script>
@@ -161,7 +167,7 @@ $todaysDate = date("m/d/y");
         <!-- dialog window markup -->
         <!--        <div id="dialog" title="Your session is about to expire!">
         <?php // $idleCount = SingleQryFld("SELECT WMS.SETTING_VALUE FROM MART_SETTINGS WMS WHERE WMS.SETTING_DESC = 'SESSION_TIMEOUT'", $conn) ?>
-                    <input type="number" value="<?php // echo $idleCount;  ?>" hidden="" id="idle-value">
+                    <input type="number" value="<?php // echo $idleCount;    ?>" hidden="" id="idle-value">
                     <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 50px 0;"></span>
                         You will be logged off in <span id="dialog-countdown" style="font-weight:bold"></span> seconds.
                     </p>
@@ -193,7 +199,7 @@ $todaysDate = date("m/d/y");
 
         </div><!-- ./wrapper -->
 
-        
-        
+
+
     </body>
 </html>

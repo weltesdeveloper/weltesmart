@@ -52,11 +52,12 @@
         </li>
         <li class="">
             <a href="#">
-                <i class="fa fa-gear"></i> <span> My <?= $globalName ?></span> <i class="fa fa-angle-left pull-right"></i>
+                <i class="fa fa-gear"></i> <span>Setting Inventory</span> <i class="fa fa-angle-left pull-right"></i>
             </a>
             <ul class="treeview-menu">
                 <li><a onclick="setting('GLOBAL')" style="cursor: pointer;"><i class="fa fa-globe"></i> Global Setting</a></li>
                 <li><a onclick="setting('MASTER_INV')" style="cursor: pointer;"><i class="fa fa-cubes"></i> Master Inventory</a></li>
+                <li><a onclick="setting('ALBUM')" style="cursor: pointer;"><i class="fa fa-sitemap"></i> Inventory Library</a></li>
             </ul>
         </li>
         <li class="">
@@ -117,7 +118,7 @@
                     </ul>
                 </li>-->
 
-        
+
 
 
 
@@ -311,6 +312,18 @@
                     }
                 });
                 break; // END OF CASE
+            case "ALBUM":
+                $.ajax({
+                    url: "../_includes/setting/album_warehouse.php",
+                    data: {},
+                    beforeSend: function (xhr) {
+                        $('#maincontent').html();
+                    },
+                    success: function (response, textStatus, jqXHR) {
+                        $('#maincontent').html(response);
+                    }
+                });
+                break;
         }
     }
 

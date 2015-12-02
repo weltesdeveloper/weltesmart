@@ -1,7 +1,7 @@
 <?php
 
 require_once '../../../_config/dbinfo.inc.php';
-require_once '../../../_config/FunctionAct.php';
+require_once '../../../_config/misc.func.php';
 session_start();
 // GENERATE THE APPLICATION PAGE
 $conn = oci_pconnect(ORA_CON_UN, ORA_CON_PW, ORA_CON_DB);
@@ -59,11 +59,12 @@ switch ($_POST['action']) {
         break;
 
     case "submit_data":
+        $id = SingleQryFld("SELECT MART_SEQ_MST_CHKOUT.NEXTVAL FROM DUAL", $conn);
         $wh_id = $_POST['wh_id'];
         $tanggal = $_POST['tanggal'];
         $job = $_POST['job'];
         $subjob = $_POST['subjob'];
-        $pembawa = str_replace("'", "''", $_POST['pembawa']) ;
+        $pembawa = str_replace("'", "''", $_POST['pembawa']);
         $spv = $_POST['spv'];
         $manager = $_POST['manager'];
         $inv_id = $_POST['inv_id'];
@@ -72,7 +73,7 @@ switch ($_POST['action']) {
         $rem = $_POST['rem'];
         $sql = "INSERT INTO MART_MST_CHKOUT (MART_WR_ID, MART_WR_DATE, MART_WR_SYSDATE, MART_WR_SIGN, 
             MART_WR_REMARK, MART_WR_JOB, MART_WR_SUBJOB, MART_WR_CARRIER, MART_WR_SPV_SIGN, MART_WR_FM_SIGN ) 
-            VALUES ('$wh_id', TO_DATE('$tanggal', 'MM/DD/YYYY'), SYSDATE, '$username', 
+            VALUES ('$id', TO_DATE('$tanggal', 'MM/DD/YYYY'), SYSDATE, '$username', 
                 '$rem', '$job', '$subjob', '$pembawa', '$spv', '$manager')";
         $parse = oci_parse($conn, $sql);
         $exe = oci_execute($parse);
@@ -81,7 +82,7 @@ switch ($_POST['action']) {
             echo "SUKSES";
             for ($i = 0; $i < count($inv_id); $i++) {
                 $DtlInsertSql = "INSERT INTO MART_DTL_CHKOUT(MART_WR_ID, MART_WR_INV_ID, MART_WR_INV_QTY, MART_WR_INV_REMARK) "
-                        . "VALUES('$wh_id', '$inv_id[$i]', '$qty[$i]', '$remark[$i]')";
+                        . "VALUES('$id', '$inv_id[$i]', '$qty[$i]', '$remark[$i]')";
                 $DtlInsertParse = oci_parse($conn, $DtlInsertSql);
                 $DtlInsert = oci_execute($DtlInsertParse);
                 if ($DtlInsert) {
@@ -99,7 +100,7 @@ switch ($_POST['action']) {
                 $sign_ = $username;
                 $type_ = "OUT";
                 $adjustSql = "INSERT INTO MART_STK_ADJ_HIST(INV_ID, HIST_ADJUST, INPUT_SIGN, INPUT_DATE, HIST_TYPE, PROPERTIES) "
-                        . "VALUES('$inv_id_', '$qty_', '$sign_', SYSDATE, '$type_', '$wh_id')";
+                        . "VALUES('$inv_id_', '$qty_', '$sign_', SYSDATE, '$type_', '$id')";
                 $adjustParse = oci_parse($conn, $adjustSql);
                 $adjust = oci_execute($adjustParse);
                 if ($adjust) {

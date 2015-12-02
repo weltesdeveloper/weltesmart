@@ -1,17 +1,17 @@
 <?php
 require_once '../../../_config/dbinfo.inc.php';
-require_once '../../../_config/FunctionAct.php';
+require_once '../../../_config/misc.func.php';
 // GENERATE THE APPLICATION PAGE
 $conn = oci_pconnect(ORA_CON_UN, ORA_CON_PW, ORA_CON_DB);
-$pr = $_GET['pr'];
-$sql = "SELECT DISTINCT MART_PR_NO, "
-        . "MART_PR_DATE, "
-        . "MART_PR_DELIV, "
-        . "TO_CHAR(MART_PR_REMARKS) MART_PR_REMARKS "
-        . "FROM MART_PR_INFO WHERE MART_PR_NO = '$pr'";
-//echo "$sql";
-$parse = oci_parse($conn, $sql);
-oci_execute($parse);
+//$pr = $_GET['pr'];
+//$sql = "SELECT DISTINCT MART_PR_NO, "
+//        . "MART_PR_DATE, "
+//        . "MART_PR_DELIV, "
+//        . "TO_CHAR(MART_PR_REMARKS) MART_PR_REMARKS "
+//        . "FROM MART_PR_INFO WHERE MART_PR_NO = '$pr'";
+////echo "$sql";
+//$parse = oci_parse($conn, $sql);
+//oci_execute($parse);
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -30,7 +30,7 @@ oci_execute($parse);
             <div style="clear:both"></div>
             <div id="customer">
                 <?php
-                while ($row = oci_fetch_array($parse)) {
+//                while ($row = oci_fetch_array($parse)) {
                     ?>
                     <table id="meta">
                         <tr>
@@ -60,7 +60,7 @@ oci_execute($parse);
                         </tr>
                     </table>
                     <?php
-                }
+//                }
                 ?>
             </div>
 

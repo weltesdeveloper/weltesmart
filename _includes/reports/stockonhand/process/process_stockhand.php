@@ -1,7 +1,7 @@
 <?php
 
 require_once '../../../../_config/dbinfo.inc.php';
-require_once '../../../../_config/FunctionAct.php';
+require_once '../../../../_config/misc.func.php';
 session_start();
 // GENERATE THE APPLICATION PAGE
 $conn = oci_connect(ORA_CON_UN, ORA_CON_PW, ORA_CON_DB) or die;

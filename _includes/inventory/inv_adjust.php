@@ -63,10 +63,10 @@ $todaysDate = date("m/d/y");
                     <h3 class="box-title"><b>MAIN INVENTORY</b> ~ <span id="specific-inv-info">ALL</span> <small>You can set stock adjustment or even make some adjustment to the minimum stock warning</small></h3>
                     <div class="box-tools pull-right">
                         <button class="btn btn-xs btn-default"><i class="fa fa-key"></i>&nbsp;TOGGLE ADJUSTMENT</button>
-                        <button class="btn btn-xs btn-default"><i class="fa fa-battery-quarter"></i>&nbsp;SET MIN STOCK</button>
+                        <!--<button class="btn btn-xs btn-default"><i class="fa fa-battery-quarter"></i>&nbsp;SET MIN STOCK</button>-->
                         <!-- In box-tools add this button if you intend to use the contacts pane -->
                         <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-                        <button class="btn btn-box-tool" data-toggle="tooltip" title="Contacts" data-widget="chat-pane-toggle"><i class="fa fa-comments"></i></button>
+                        <!--<button class="btn btn-box-tool" data-toggle="tooltip" title="Contacts" data-widget="chat-pane-toggle"><i class="fa fa-comments"></i></button>-->
                         <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
                     </div><!-- /.box-tools -->
                 </div><!-- /.box-header -->
@@ -90,7 +90,16 @@ $todaysDate = date("m/d/y");
                 </div><!-- /.box-body -->
             </div><!-- /.box -->
         </div>
-
+        <br/>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="box">
+                    <div class="box-header">
+                        <button class="btn btn-success col-md-12" onclick="PrintStock();">PRINT STOCK</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <!--MODAL BOOTSTRAP-->
         <div class="modal modal-default fade" id="myModal" role="dialog">
             <div class="modal-dialog modal-lg">
@@ -134,19 +143,75 @@ $todaysDate = date("m/d/y");
 
             </div>
         </div>
-        <!-- END MODAL BOOTSTRAP -->    
-
-        <!-- ITEM DETAILS MODAL -->
-        <div id="modalDetails">tes</div>
-        
-        <!-- ITEM DETAILS MODAL QR CODE-->
-        <div id="modalDetailsQrCode">tes</div>
-      
-        <!-- END ITEM DETAILS MODAL -->
-
     </div>
+    <!-- ITEM DETAILS MODAL -->
+    <div class="modal modal-default fade" id="inv-detail-modal" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+    <!--                    <span id="inv-qr-details"></span>-->
+                    <h4 class="modal-title text-center">Inventory Details For 
+                        <span id="inv-id-details"></span>
 
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-striped">
+                        <tbody>
+                            <tr>
+                                <td rowspan="6"></td>
+                                <td>INV ID COL</td>
+                            </tr>
+                            <tr>
+                                <td>INV DESC COL</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>INV DETAILS COL</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>INV LOCATION COL</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>INV STOCK COL</td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-success">Print Stock Card</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END ITEM DETAILS MODAL -->
 
+    <!-- ITEM DETAILS MODAL -->
+    <div class="modal modal-default fade" id="modalViewQrCOde" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title text-center">Inventory Details For 
+                        <span id="inv-id-details"></span>
+                    </h4>
+                </div>
+                <div class="modal-body">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-outline">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END ITEM DETAILS MODAL -->
 </section>
 
 <script src="../_includes/inventory/pages/js/controller.js" type="text/javascript"></script>

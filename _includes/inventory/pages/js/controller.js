@@ -222,12 +222,33 @@ function History(param) {
             $('#in').text(jumlahplus);
             $('#out').text(jumlahminus);
             $('#jumlah').text(jumlahplus + jumlahminus);
+            $('#modal-table').DataTable({
+//                initComplete: function () {
+//                    this.api().columns().every(function () {
+//                        var column = this;
+//                        var select = $('<select><option value=""></option></select>')
+//                                .appendTo($(column.footer()).empty())
+//                                .on('change', function () {
+//                                    var val = $.fn.dataTable.util.escapeRegex(
+//                                            $(this).val()
+//                                            );
+//
+//                                    column
+//                                            .search(val ? '^' + val + '$' : '', true, false)
+//                                            .draw();
+//                                });
+//
+//                        column.data().unique().sort().each(function (d, j) {
+//                            select.append('<option value="' + d + '">' + d + '</option>')
+//                        });
+//                    });
+//                }
+            });
         }
     });
 }
 
 function Details(param) {
-
     $.ajax({
         type: "POST",
         url: "../_includes/inventory/pages/modal/modalDetails.php",
@@ -250,8 +271,8 @@ function showQrCode(param) {
         dataType: "JSON",
         data: {inv_id: param, "action": "show_qr"},
         success: function (response, textStatus, jqXHR) {
-            $('#inv-detail-modal .modal-body').empty();
-            $('#inv-detail-modal .modal-body').qrcode({
+            $('#inv-qr-details').empty();
+            $('#inv-qr-details').qrcode({
                 "render": "div",
                 "size": 100,
                 "text": response[0].INV_DESC
@@ -304,6 +325,10 @@ function initModalTableProp() {
             });
         }
     });
+}
+
+function PrintStock() {
+    window.open("../_includes/inventory/process/print_stock_uptodate.php");
 }
 
 $(document).ready(function () {
