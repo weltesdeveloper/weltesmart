@@ -3,9 +3,9 @@
     // DO NOT MODIFY THIS PAGE UNLESS YOU WANT TO ADD MORE CREDENTIALS
     define("ORA_CON_UN", "WELTESADMIN");
     define("ORA_CON_PW", "weltespass");
-    define("ORA_CON_DB", "192.168.100.195/WENMART");
+    define("ORA_CON_DB", "192.168.100.71/WENMART");
     
-    define("ORA_CON_DB2", "192.168.100.195/WENLOGINV");
+    define("ORA_CON_DB2", "192.168.100.68/WENLOGINV");
     
     
     $conn_wenloginv = oci_connect(ORA_CON_UN, ORA_CON_PW, ORA_CON_DB2) or die;

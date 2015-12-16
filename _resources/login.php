@@ -7,7 +7,7 @@
         <!-- Tell the browser to be responsive to screen width -->
         <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
         <!-- Bootstrap 3.3.5 -->
-        <link href="_templates/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+        <link href="_templates/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
         <!-- Font Awesome -->
         <link href="_templates/plugins/font-awesome-4.4.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
         <!-- Ionicons -->
@@ -33,7 +33,7 @@
                 <p class="login-box-msg">Secure Login</p>
                 <form action="_resources/login_process/checklogin.php" method="post">
                     <div class="form-group has-feedback">
-                        <input type="text" class="form-control" placeholder="Email" name="email">
+                        <input type="text" class="form-control" placeholder="Username" name="username">
                         <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
                     </div>
                     <div class="form-group has-feedback">
@@ -55,7 +55,7 @@
         <!-- jQuery 2.1.4 -->
         <script src="_templates/plugins/jQuery/jQuery-2.1.4.min.js" type="text/javascript"></script>
         <!-- Bootstrap 3.3.5 -->
-        <script src="_templates/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+        <!--<script src="_templates/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>-->
         <!-- iCheck -->
         <script src="_templates/plugins/iCheck/icheck.min.js" type="text/javascript"></script>
         <script>

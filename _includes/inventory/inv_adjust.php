@@ -75,13 +75,13 @@ $todaysDate = date("m/d/y");
                         <thead>
                             <tr>
                                 <th style="width: 7%">ID</th>
-                                <th style="width: 7%">QR</th>
+                                <!--<th style="width: 7%    ">QR</th>-->
                                 <th>DESCRIPTION</th>
                                 <th class="text-center" style="width: 6%">UNIT</th> 
                                 <th class="text-center" style="width: 10%">ON HAND</th>
                                 <th class="text-center" style="width: 10%">MIN</th>
-                                <th class="text-center" style="width: 10%">MAX</th>
-                                <th class="text-center" style="width: 10%">SAFE</th>
+                                <!--<th class="text-center" style="width: 10%">MAX</th>-->
+                                <!--<th class="text-center" style="width: 10%">SAFE</th>-->
                                 <th class="text-center" style="width: 10%">STOCK STATUS</th>
                                 <th class="text-center" style="width: 16%">DETAILS/ACTIONS</th>
                             </tr>
@@ -214,4 +214,4 @@ $todaysDate = date("m/d/y");
     <!-- END ITEM DETAILS MODAL -->
 </section>
 
-<script src="../_includes/inventory/pages/js/controller.js" type="text/javascript"></script>
+<script src="../_includes/inventory/js/controller.js"></script>

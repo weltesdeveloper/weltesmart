@@ -63,23 +63,23 @@
                         </div>
                         <div class="col-md-3 col-xs-3 col-lg-3">
                             <div class="form-group">   
-                                <label class="control-label">MANAGER</label>
-                                <div class="input-group">
-                                    <div class="input-group-addon">
-                                        <i class="fa fa-user-plus"></i>
-                                    </div>
-                                    <input type="text" class="form-control pull-right" id="manager" value="EDIYANTO">
-                                </div><!-- /.input group -->
-                            </div><!-- /.form group -->
-                        </div>
-                        <div class="col-md-3 col-xs-3 col-lg-3">
-                            <div class="form-group">   
                                 <label class="control-label">REMARK</label>
                                 <div class="input-group">
                                     <div class="input-group-addon">
                                         <i class="fa fa-user-plus"></i>
                                     </div>
                                     <input type="text" class="form-control pull-right" id="remark" placeholder="Remark jika diperlukan">
+                                </div><!-- /.input group -->
+                            </div><!-- /.form group -->
+                        </div>
+                        <div class="col-md-3 col-xs-3 col-lg-3">
+                            <div class="form-group">   
+                                <label class="control-label">MANAGER</label>
+                                <div class="input-group">
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-user-plus"></i>
+                                    </div>
+                                    <input type="text" class="form-control pull-right" id="manager" value="EDIYANTO">
                                 </div><!-- /.input group -->
                             </div><!-- /.form group -->
                         </div>
@@ -127,9 +127,6 @@
         <div class="col-md-12 col-xs-12 col-lg-12">
             <button class="btn btn-block btn-success" id="submit-checkout" onclick="SubmitBonGudang();">SUBMIT</button>
         </div>
-        <!--        <div class="col-md-6 col-xs-6 col-lg-6">
-                    <button class="btn btn-block btn-success" id="submit-checkout">SUBMIT & PRINT</button>
-                </div>-->
     </div>
 
 </section>

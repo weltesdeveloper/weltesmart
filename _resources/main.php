@@ -56,9 +56,9 @@ $todaysDate = date("m/d/y");
         <meta name="theme-color" content="#ffffff">
 
         <!-- Bootstrap 3.3.5 -->
-        <link href="../_templates/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+        <link href="../_templates/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
         <!--Select 2-->
-        <link href="../_templates/select2/css/select2.min.css" rel="stylesheet" type="text/css">
+        <!--<link href="../_templates/select2/css/select2.min.css" rel="stylesheet" type="text/css">-->
         <!-- Font Awesome -->
         <link href="../_templates/plugins/font-awesome-4.4.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
         <!-- Ionicons -->
@@ -93,6 +93,8 @@ $todaysDate = date("m/d/y");
         <!-- SWITCHERY -->
         <link href="../_templates/plugins/switchery-master/dist/switchery.min.css" rel="stylesheet" type="text/css"/>
         <link href="../_templates/plugins/boostrap-fileinput/css/fileinput.min.css" rel="stylesheet" type="text/css">
+        <!--Dropzone-->
+        <link href="../_templates/plugins/dropzone/dropzone.css" rel="stylesheet" type="text/css">
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
         <!--[if lt IE 9]>
@@ -104,12 +106,12 @@ $todaysDate = date("m/d/y");
         <script src="../_templates/plugins/jQuery/jQuery-2.1.4.min.js"></script>
         <!-- jQuery UI 1.11.4 -->
         <script src="../_templates/plugins/jQueryUI/jquery-ui.min.js" type="text/javascript"></script>
-        <script src="../_templates/plugins/jquery-ui-1.11.4/jquery-ui.min.js" type="text/javascript"></script>
         <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+        <script src="../_templates/plugins/jquery-ui-1.11.4/jquery-ui.min.js" type="text/javascript"></script>
         <!--Select 2 Plugin-->
-        <script src="../_templates/select2/js/select2.min.js"></script>
+        <!--<script src="../_templates/select2/js/select2.min.js"></script>-->
         <!-- Bootstrap 3.3.5 -->
-        <script src="../_templates/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+        <script src="../_templates/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
         <!-- Morris.js charts -->
         <script src="../_templates/plugins/raphael_2.1.4.js" type="text/javascript"></script>
         <script src="../_templates/plugins/silviomoreto-bootstrap-select-a8ed49e/dist/js/bootstrap-select.js"></script>
@@ -159,15 +161,23 @@ $todaysDate = date("m/d/y");
         <script src="../_templates/plugins/switchery-master/dist/switchery.js" type="text/javascript"></script>
         <!--FileInput-->
         <script src="../_templates/plugins/boostrap-fileinput/js/fileinput.min.js"></script>
-        <script>
+        <script type="text/javascript">
             $.widget.bridge('uibutton', $.ui.button);
+
+            //kumpulan fungsi
+            function PopupCenter(pageURL, title, w, h) {
+                var left = (screen.width / 2) - (w / 2);
+                var top = (screen.height / 2) - (h / 2);
+                var targetWin = window.open(pageURL, title, 'toolbar=no, location=no, directories=no,status=no, menubar=no, scrollbars=yes, resizable=no, copyhistory=no, width=' + w + ', height=' + h + ', top=' + top + ', left=' + left);
+                targetWin.focus();
+            }
         </script>
     </head>
     <body class="hold-transition skin-blue sidebar-mini fixed">
         <!-- dialog window markup -->
         <!--        <div id="dialog" title="Your session is about to expire!">
         <?php // $idleCount = SingleQryFld("SELECT WMS.SETTING_VALUE FROM MART_SETTINGS WMS WHERE WMS.SETTING_DESC = 'SESSION_TIMEOUT'", $conn) ?>
-                    <input type="number" value="<?php // echo $idleCount;    ?>" hidden="" id="idle-value">
+                    <input type="number" value="<?php // echo $idleCount;       ?>" hidden="" id="idle-value">
                     <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 50px 0;"></span>
                         You will be logged off in <span id="dialog-countdown" style="font-weight:bold"></span> seconds.
                     </p>

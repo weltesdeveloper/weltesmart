@@ -131,7 +131,7 @@
 </section>
 <!-- /.sidebar -->
 
-<script>
+<script type="text/javascript">
     $('.selectpicker').selectpicker();
     function inventory(param) {
         switch (param) {

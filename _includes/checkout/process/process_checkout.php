@@ -12,15 +12,33 @@ oci_set_client_identifier($conn, $_SESSION['userlogin']);
 $username = htmlentities($_SESSION['userlogin'], ENT_QUOTES);
 switch ($_POST['action']) {
     case "getjob":
-        $response = array();
+        $job = array();
         $sql = "SELECT DISTINCT PROJECT_NO FROM VW_PROJ_INFO@WELTESMART_WELTES_LINK ORDER BY PROJECT_NO ASC";
         $parse = oci_parse($conn, $sql);
         oci_execute($parse);
         while ($row = oci_fetch_array($parse)) {
-            array_push($response, $row);
+            array_push($job, $row);
         }
-
-
+        $spv = array();
+        $spvSql = "SELECT DISTINCT UPPER(MART_WR_SPV_SIGN) MART_WR_SPV_SIGN FROM MART_MST_CHKOUT ORDER BY UPPER(MART_WR_SPV_SIGN) ASC";
+        $spvParse = oci_parse($conn, $spvSql);
+        oci_execute($spvParse);
+        while ($row2 = oci_fetch_array($spvParse)) {
+            array_push($spv, $row2);
+        }
+        
+        $pembawa = array();
+        $pembawaSql = "SELECT DISTINCT UPPER(MART_WR_CARRIER) MART_WR_CARRIER FROM MART_MST_CHKOUT ORDER BY UPPER(MART_WR_CARRIER) ASC";
+        $pembawaParse = oci_parse($conn, $pembawaSql);
+        oci_execute($pembawaParse);
+        while ($row3 = oci_fetch_array($pembawaParse)) {
+            array_push($pembawa, $row3);
+        }
+        $response = array(
+            "job"=>$job,
+            "spv"=>$spv,
+            "pembawa"=>$pembawa
+        );
         echo json_encode($response);
         break;
     case "getsubjob":

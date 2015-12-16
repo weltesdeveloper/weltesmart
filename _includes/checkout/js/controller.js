@@ -8,7 +8,8 @@ var cons_checkout_table = $('#inv-checkout-table').dataTable({
     "bPaginate": false
 });
 var counter = 0;
-
+var pembawa = [];
+var spv = [];
 /*PROSES JAVASCRIPT DAN JQUERY*/
 $.ajax({
     type: 'POST',
@@ -20,13 +21,27 @@ $.ajax({
     },
     success: function (response, textStatus, jqXHR) {
         var option = "<option value='' disabled selected=''>[Select Job]</value>";
-        $.each(response, function (key, value) {
+        $.each(response.job, function (key, value) {
             option += "<option value=" + value.PROJECT_NO + ">" + value.PROJECT_NO + "</option>";
         });
         $('#job').selectpicker().append(option);
+        
+        $.each(response.spv, function (key, value){
+            spv.push(value.MART_WR_SPV_SIGN);
+        });
+        
+        $.each(response.pembawa, function (key, value){
+            pembawa.push(value.MART_WR_CARRIER);
+        });
     },
     complete: function (jqXHR, textStatus) {
         $('#job').selectpicker().selectpicker('refresh');
+        $("#spv").autocomplete({
+            source: spv
+        });
+        $("#pembawa").autocomplete({
+            source: pembawa
+        });
     }
 });
 
@@ -46,7 +61,7 @@ function ChangeJob() {
                 option += "<option value=" + value.PROJECT_NAME_NEW + ">" + value.PROJECT_NAME_NEW + "</option>";
             });
             $('#subjob').selectpicker().append(option);
-            $('#wh-receipt').text(response.wh_id);
+            $('#wh-receipt').html(response.wh_id);
         },
         complete: function (jqXHR, textStatus) {
             $('#subjob').selectpicker().selectpicker('refresh');
