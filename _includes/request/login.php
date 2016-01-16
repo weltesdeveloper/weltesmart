@@ -1,11 +1,6 @@
 <?php
-    require_once('../../_config/dbinfo.inc.php');
-    require_once('../../_config/misc.func.php');
-    $conn = oci_connect(ORA_CON_UN, ORA_CON_PW, ORA_CON_DB) or die;
-    $todaysDate = date("m/d/y");
-    $globalName = SingleQryFld("SELECT WMS.SETTING_VALUE_STRING FROM MART_SETTINGS WMS WHERE WMS.SETTING_DESC = 'GLOBAL_NAME'", $conn);
-    $var1sql = "SELECT WMS.SETTING_VALUE FROM MART_SETTINGS WMS WHERE WMS.SETTING_DESC = 'SESSION_TIMEOUT'";
-    $var1 = SingleQryFld($var1sql, $conn);
+    require_once('../../_config/Dbconfig.php');
+    $dbconbfig = new Dbconfig();
 ?>
 
 <!DOCTYPE html>

@@ -1,32 +1,8 @@
 <?php
-require_once('../_config/dbinfo.inc.php');
-require_once('../_config/misc.func.php');
+require_once '../_config/Dbconfig.php';
+$dbconbfig = new Dbconfig();
 session_start();
-
-if (!isset($_SESSION['userlogin'])) {
-    echo <<< EOD
-   <h1>You are UNAUTHORIZED !</h1>
-   <p>INVALID usernames/passwords<p>
-   <p><a href="../index.php">LOGIN PAGE</a></p>
-
-EOD;
-    exit;
-}
-
-// GENERATE THE APPLICATION PAGE
-$conn = oci_connect(ORA_CON_UN, ORA_CON_PW, ORA_CON_DB) or die;
-
-// 1. SET THE CLIENT IDENTIFIER AFTER EVERY CALL
-// 2. USING UNIQUE VALUE FOR BACK END USER
-oci_set_client_identifier($conn, $_SESSION['userlogin']);
-
-$username = htmlentities($_SESSION['userlogin'], ENT_QUOTES);
-$companyRole = htmlentities($_SESSION['rolelogin'], ENT_QUOTES);
-//    $firstName = htmlentities($_SESSION['firstname'], ENT_QUOTES);
-//    $lastName = htmlentities($_SESSION['lastname'], ENT_QUOTES);
-$globalName = htmlentities($_SESSION['globalname'], ENT_QUOTES);
-
-$todaysDate = date("m/d/y");
+$username = $_SESSION['userlogin'];
 ?>
 
 <!DOCTYPE html>
@@ -34,7 +10,7 @@ $todaysDate = date("m/d/y");
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title><?= $globalName ?> | Dashboard</title>
+        <title> | Dashboard</title>
         <!-- Tell the browser to be responsive to screen width -->
         <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 
@@ -57,8 +33,6 @@ $todaysDate = date("m/d/y");
 
         <!-- Bootstrap 3.3.5 -->
         <link href="../_templates/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
-        <!--Select 2-->
-        <!--<link href="../_templates/select2/css/select2.min.css" rel="stylesheet" type="text/css">-->
         <!-- Font Awesome -->
         <link href="../_templates/plugins/font-awesome-4.4.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
         <!-- Ionicons -->
@@ -174,16 +148,6 @@ $todaysDate = date("m/d/y");
         </script>
     </head>
     <body class="hold-transition skin-blue sidebar-mini fixed">
-        <!-- dialog window markup -->
-        <!--        <div id="dialog" title="Your session is about to expire!">
-        <?php // $idleCount = SingleQryFld("SELECT WMS.SETTING_VALUE FROM MART_SETTINGS WMS WHERE WMS.SETTING_DESC = 'SESSION_TIMEOUT'", $conn) ?>
-                    <input type="number" value="<?php // echo $idleCount;       ?>" hidden="" id="idle-value">
-                    <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 50px 0;"></span>
-                        You will be logged off in <span id="dialog-countdown" style="font-weight:bold"></span> seconds.
-                    </p>
-                    <p>Do you want to continue your session?</p>
-                </div>-->
-
         <div class="wrapper">
             <header class="main-header">
                 <?php include 'elements/header.php'; ?>

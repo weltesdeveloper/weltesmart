@@ -31,11 +31,21 @@ function feedToTable() {
             "columns":
                     [
                         {"data": "INV_ID"},
-                        {"data": "INV_DESC"},
-                        {"data": "INV_UNIT", className: "text-center"}
+                        {"data": "INV_DESC"}
+//                        {"data": "INV_UNIT", className: "text-center"}
                     ],
             "columnDefs":
                     [
+                        {
+                            "orderable": true,
+                            "visible": true,
+                            "targets": [2],
+                            "className": 'text-center',
+                            "render": function (data, type, row, meta) {
+                                var isi = '<a data-type="select" style="cursor:pointer" class="initSelectClass text-center" data-pk="' + row.INV_ID + '">' + row.INV_STK_UNIT + '</a>';
+                                return isi;
+                            }
+                        },
                         {
                             "orderable": true,
                             "visible": true,
@@ -111,9 +121,9 @@ function feedToTable() {
                         }
                     },
                     success: function (response, newValue) {
-                        console.log(newValue);
                         var element = $(this);
                         var inv_id = element.data("pk");
+                        console.log(newValue);
                         console.log(inv_id);
                         $.ajax({
                             type: 'POST',
@@ -125,6 +135,42 @@ function feedToTable() {
                         });
                     }
                 });
+
+                $('.initSelectClass').editable({
+                    value: 2,
+                    source: [
+                        {value: 'Box', text: 'Box'},
+                        {value: 'Dos', text: 'Dos'},
+                        {value: 'Dz', text: 'Dz'},
+                        {value: 'Kg', text: 'Kg'},
+                        {value: 'Pcs', text: 'Pcs'},
+                        {value: 'Roll', text: 'Roll'},
+                        {value: 'Sec', text: 'Sec'},
+                        {value: 'Set', text: 'Set'},
+                        {value: 'Tbg', text: 'Tbg'}
+                    ],
+                    success: function (response, newValue) {
+                        var element = $(this);
+                        var inv_id = element.data("pk");
+                        console.log(newValue);
+                        console.log(inv_id);
+                        $.ajax({
+                            type: 'POST',
+                            data: {inv_id: inv_id, value: newValue, type: "adjust_unit", "action": "update_data"},
+                            url: "../_includes/inventory/process/process.php",
+                            success: function (response, textStatus, jqXHR) {
+//                                alert(response);
+                            }
+                        });
+                    }
+                }).on('click', function () {
+//                    alert('okk');
+                    $('.editable-input').find('select').attr('data-live-search', 'true').selectpicker({
+//                        'live-search':true
+                        "width": "200px"
+                    });
+                });
+
             },
             "fnCreatedRow": function (nRow, aData, iDataIndex) {
                 $(nRow).attr('id', 'row' + idNO);
@@ -192,7 +238,7 @@ function History(param) {
 //            $('#modal-table').DataTable({});
             $('#in').text(jumlahplus);
             $('#out').text(jumlahminus);
-            $('#jumlah').text(jumlahplus+jumlahminus);
+            $('#jumlah').text(jumlahplus + jumlahminus);
         }
     });
 }

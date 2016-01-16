@@ -116,11 +116,11 @@ $todaysDate = date("m/d/y");
         var end = $('#end').val();
 
         window.open("../_resources/tools/PHPToExcel/report_excel.php?job=" + job + "&start=" + start + "&end=" + end);
-    }
+    }   
     
     function PrintData2(){
-        var start = $('#start').val();
-        var end = $('#end').val();
+        var start = $('#stock-start').val();
+        var end = $('#stock-end').val();
         window.open("../_resources/tools/PHPToExcel/report_excel2.php?start=" + start + "&end=" + end);
     }
 </script>
