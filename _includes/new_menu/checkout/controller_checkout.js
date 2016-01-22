@@ -13,7 +13,7 @@ var spv = [];
 /*PROSES JAVASCRIPT DAN JQUERY*/
 $.ajax({
     type: 'POST',
-    url: "../_includes/checkout/process/process_checkout.php",
+    url: "../_includes/new_menu/checkout/model_checkout.php",
     data: {"action": "getjob"},
     dataType: 'JSON',
     beforeSend: function (xhr) {
@@ -49,7 +49,7 @@ function ChangeJob() {
     var job = document.getElementById('job').value;
     $.ajax({
         type: 'POST',
-        url: "../_includes/checkout/process/process_checkout.php",
+        url: "../_includes/new_menu/checkout/model_checkout.php",
         data: {"action": "getsubjob", "job": job},
         dataType: 'JSON',
         beforeSend: function (xhr) {
@@ -75,6 +75,7 @@ function AddItem() {
         "<span id='max" + counter + "'></span>",
         "<input type='number' class='form-control' style='width: -moz-available;' value='1' min='0' id='qty" + counter + "' onchange=ChangeQty('" + counter + "')>",
         "<input type='text' class='form-control' style='width: -moz-available;'/></div>",
+        "",
         "<i class='fa fa-trash fa-fw fa-lg text-danger' style='cursor: pointer;' onclick=DeleteItem(" + counter + ")></i>"
     ]);
 
@@ -96,7 +97,7 @@ function AddItem() {
         var initSelectpicker = $(this).selectpicker();
         $.ajax({
             type: 'POST',
-            url: "../_includes/checkout/process/process_checkout.php",
+            url: "../_includes/new_menu/checkout/model_checkout.php",
             data: {"action": "get_inventory"},
             dataType: 'JSON',
             beforeSend: function (xhr) {
@@ -159,20 +160,16 @@ function SubmitBonGudang() {
 
     console.log(sentReq);
     if (job == "") {
-//        swal("ENTER JOB FIRST", "ERROR", "error");
-        alert("ENTER JOB FIRST");
+        swal("ENTER JOB FIRST", "ERROR", "error");
         $('#job').focus();
     } else if (pembawa == "") {
-//        swal("ENTER CARRIER", "ERROR", "error");
-        alert("ENTER CARRIER FIRST");
+        swal("ENTER CARRIER", "ERROR", "error");
         $('#pembawa').focus();
     } else if (spv == "") {
-//        swal("ENTER SPV", "ERROR", "error");
-        alert("ENTER SPV FIRST");
+        swal("ENTER SPV", "ERROR", "error");
         $('#spv').focus();
     } else if (inv_id.length == 0) {
-//        swal("ENTER INVENTORY MINIMUN 1 ITEM", "ERROR", "error");
-        alert("ENTER INVENTORY MINIMUN 1 ITEM");
+        swal("ENTER INVENTORY MINIMUN 1 ITEM", "ERROR", "error");
 //        $('#tanggal').focus();
     } else {
         var cf = confirm("DO YOU WANT SUBMIT?");
@@ -180,14 +177,12 @@ function SubmitBonGudang() {
             $.ajax({
                 type: 'POST',
                 data: sentReq,
-                url: "../_includes/checkout/process/process_checkout.php",
+                url: "../_includes/new_menu/checkout/model_checkout.php",
                 success: function (response, textStatus, jqXHR) {
                     if (response.indexOf("GAGAL") > 0) {
-//                        swal("GAGAL INSERT", response, "error");
-                        alert("GAGAL INSERT" + response);
+                        swal("GAGAL INSERT", response, "error");
                     } else {
-//                        swal("SUCCESS INSERT", "GOOD JOB", "success");
-                        alert("SUCCESS INSERT");
+                        swal("SUCCESS INSERT", "GOOD JOB", "success");
                         checkout('CHECKOUT');
                     }
                 }
@@ -203,7 +198,7 @@ function ChangeInventory(param) {
     console.log(inv_id);
     $.ajax({
         type: 'POST',
-        url: "../_includes/checkout/process/process_checkout.php",
+        url: "../_includes/new_menu/checkout/model_checkout.php",
         data: {action: "check_max", inv_id: inv_id},
         dataType: "JSON",
         success: function (response, textStatus, jqXHR) {

@@ -1,9 +1,10 @@
 <?php
 require_once('../../_config/dbinfo.inc.php');
 require_once('../../_config/misc.func.php');
-$conn = oci_connect(ORA_CON_UN, ORA_CON_PW, ORA_CON_DB) or die;
+
 $todaysDate = date("m/d/y");
 $globalName = SingleQryFld("SELECT WMS.SETTING_VALUE_STRING FROM MART_SETTINGS WMS WHERE WMS.SETTING_DESC = 'GLOBAL_NAME'", $conn);
+
 $var1sql = "SELECT WMS.SETTING_VALUE FROM MART_SETTINGS WMS WHERE WMS.SETTING_DESC = 'SESSION_TIMEOUT'";
 $var1 = SingleQryFld($var1sql, $conn);
 ?>
@@ -55,10 +56,7 @@ $var1 = SingleQryFld($var1sql, $conn);
             <div class="box box-default box-solid">
                 <div class="box-header with-border">
                     <h3 class="box-title"><i class="fa fa-gear"></i><b>&nbsp;&nbsp;INPUT PHOTO AND LOCATION FOR WAREHOUSE INVENTORY</b> </h3>
-                    <div class="box-tools pull-right">
-                        <button class="btn btn-xs btn-default" onclick="printAlbum()">
-                            <i class="fa fa-print text-warning fa-lg"></i>&nbsp;PRINT ALBUM
-                        </button>
+                    <div class="box-tools pull-right">                        
                         <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                         <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
                     </div><!-- /.box-tools -->
@@ -77,6 +75,15 @@ $var1 = SingleQryFld($var1sql, $conn);
                                 <th class="text-center">SHOW IMAGE</th>
                             </tr>
                         </thead>
+                        <tfoot>
+                            <tr>
+                                <th colspan="8"  style="text-align: left !important; background-color: graytext;">
+                                    <button class="btn btn-xs btn-default" id="btn_print_album">
+                                        <i class="fa fa-print text-warning fa-lg"></i>&nbsp;PRINT ALBUM SELECTED ITEM
+                                    </button>
+                                </th>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
             </div>
@@ -87,7 +94,7 @@ $var1 = SingleQryFld($var1sql, $conn);
     <div id="myModal" class="modal fade" role="dialog">
         <div class="modal-dialog">
             <!-- Modal content-->
-            <div class="modal-content modal-lg" style="width: 1024px;">                
+            <div class="modal-content modal-lg">                
             </div>
         </div>
     </div>
@@ -97,6 +104,7 @@ $var1 = SingleQryFld($var1sql, $conn);
     var parent = $('#sec-album');
     var tbl_element = parent.find('#tbl_mst_inv');
     var tbl_data = tbl_element.DataTable();
+
 
     parent.find('select#inv_type').selectpicker();
     parent.find('#showInvButton').click(function () {
@@ -108,18 +116,24 @@ $var1 = SingleQryFld($var1sql, $conn);
         updateDataTableSelectAllCtrl($(this));
     });
 
-//        $("#input-repl-2").fileinput({
-//            uploadUrl: "../_includes/setting/process_album/album_warehouse_process.php",
-//            autoReplace: true,
-//            maxFileCount: 1,
-//            allowedFileExtensions: ["jpg", "png", "gif"],
-//            uploadExtraData: function () {
-//                return {
-//                    "param": "test123",
-//                    "inv_id": $('#inventory-id').text().trim()
-//                };
-//            }
-//        });
+    parent.find('#btn_print_album').click(function () {
+        $.ajax({
+            url: "../_includes/setting/process_album/album_warehouse_process.php",
+            type: 'POST',
+            data: {
+                param: 'show_modal_print_album'
+            },
+            beforeSend: function (xhr) {
+                parent.find('#myModal').find('.modal-content').empty();
+            },
+            success: function (resp, textStatus, jqXHR) {
+                parent.find('#myModal').find('.modal-content').html(resp);
+            },
+            complete: function (jqXHR, textStatus) {
+                parent.find('#myModal').modal('show');
+            }
+        });
+    });
 
     // kumpulan Fungsi
     function loadDataFromTable(inv_type) {
@@ -199,7 +213,7 @@ $var1 = SingleQryFld($var1sql, $conn);
                             "className": "text-center",
                             "targets": [5],
                             "render": function (data, type, row, meta) {
-                                var isi = "<input type='text' class='form-control' style='width:100%;' onkeyup=UpperCase('" + row.INV_ID + "'); id='location" + row.INV_ID + "' value='" + row.INV_WH_LOC + "'>";
+                                var isi = "<input type='text' class='form-control' style='width:100%;' onkeyup='this.value=" + 'this.value.toUpperCase();' + "' id='location" + row.INV_ID + "' value='" + row.INV_WH_LOC + "'>";
                                 return isi;
                             }
                         },
@@ -219,7 +233,7 @@ $var1 = SingleQryFld($var1sql, $conn);
                             "render": function (data, type, row, meta) {
                                 var isi = "<i class='fa fa-times' style='color:red;'></i>";
                                 if (row.JML_GMBAR > 0) {
-                                    isi = "<i class='fa fa-check' style='cursor:pointer;' onclick=UploadImage('" + row.INV_ID + "');></i>";
+                                    isi = "<i class='fa fa-check' style='cursor:pointer;' onclick=showUploadImage('" + row.INV_ID + "');></i>";
                                 }
                                 return isi;
                             }
@@ -276,20 +290,27 @@ $var1 = SingleQryFld($var1sql, $conn);
         });
     }
 
-    function UpperCase(param) {
-        var input = $('#location' + param).val();
-        var upper = input.toUpperCase();
-        $('#location' + param).val(upper);
-    }
     function printAlbum() {
-        var inv_type = parent.find('select#inv_type').val();
-        var url_vars = '?inv_type=' + inv_type;
+        var judul = $('#txt_judul_album').val().trim();
+        var inv_id = "";
+
+        var baris = tbl_data.rows().nodes();
+        $('input[type = "checkbox"]:checked', baris).each(function (i, rows) {
+            var tr_row = $(this).closest('tr')[0];
+            var td_row = $(tr_row).find('td:eq(0)');
+            //console.log($(this));       
+            inv_id += "'" + $(this).val() + "'*";
+        });
+
+
+
+        var url_vars = '?judul=' + encodeURIComponent(judul) + '&inv_id=' + encodeURIComponent(inv_id);
         var URL = '../_includes/setting/process_album/album_warehouse_PRINT.php' + url_vars;
         PopupCenter(URL, 'popupEQP_RENT', '1100', '700');
 
     }
 
-    function UploadImage(param) {
+    function showUploadImage(param) {
         console.log(param);
         $('#inventory-id').text(param);
         $("#myModal").modal('show');

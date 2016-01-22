@@ -1,8 +1,8 @@
 <?php
-require_once '../_config/Dbconfig.php';
-$dbconbfig = new Dbconfig();
 session_start();
 $username = $_SESSION['userlogin'];
+$user_role = $_SESSION['rolelogin'];
+
 ?>
 
 <!DOCTYPE html>
@@ -79,9 +79,10 @@ $username = $_SESSION['userlogin'];
         <!-- jQuery 2.1.4 -->
         <script src="../_templates/plugins/jQuery/jQuery-2.1.4.min.js"></script>
         <!-- jQuery UI 1.11.4 -->
-        <script src="../_templates/plugins/jQueryUI/jquery-ui.min.js" type="text/javascript"></script>
+        <!--<script src="../_templates/plugins/jQueryUI/jquery-ui.min.js" type="text/javascript"></script>-->
         <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
         <script src="../_templates/plugins/jquery-ui-1.11.4/jquery-ui.min.js" type="text/javascript"></script>
+        
         <!--Select 2 Plugin-->
         <!--<script src="../_templates/select2/js/select2.min.js"></script>-->
         <!-- Bootstrap 3.3.5 -->
@@ -135,6 +136,9 @@ $username = $_SESSION['userlogin'];
         <script src="../_templates/plugins/switchery-master/dist/switchery.js" type="text/javascript"></script>
         <!--FileInput-->
         <script src="../_templates/plugins/boostrap-fileinput/js/fileinput.min.js"></script>
+        <!--AUTO NUMERIC-->
+        <script src="../_templates/plugins/autonumeric/autoNumeric.js  "></script> 
+        
         <script type="text/javascript">
             $.widget.bridge('uibutton', $.ui.button);
 

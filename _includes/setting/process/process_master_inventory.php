@@ -1,12 +1,6 @@
 <?php
 
 require_once '../../../_config/dbinfo.inc.php';
-session_start();
-// GENERATE THE APPLICATION PAGE
-$conn = oci_connect(ORA_CON_UN, ORA_CON_PW, ORA_CON_DB) or die;
-
-// 1. SET THE CLIENT IDENTIFIER AFTER EVERY CALL
-// 2. USING UNIQUE VALUE FOR BACK END USER
 
 $sql = oci_parse($conn, "SELECT MI.INV_ID, "
         . "MI.INV_DESC, "

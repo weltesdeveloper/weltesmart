@@ -107,7 +107,8 @@
                                     <tr>
                                         <th class="text-center" style="width: 50%;" >INVENTORY</th>
                                         <th class="text-center" style="width: 10%;">MAX STOCK QTY</th>
-                                        <th class="text-center">QUANTITY</th>
+                                        <th class="text-center">CHECKOUT QTY</th>
+                                        <th class="text-center">CHECKOUT UNIT</th>
                                         <th class="text-center">REMARKS</th>
                                         <th class="text-center" style="width: 6%;">DELETE</th>
                                     </tr>
@@ -131,4 +132,4 @@
 
 </section>
 
-<script src="../_includes/checkout/js/controller.js" type="text/javascript"></script>
+<script src="../_includes/new_menu/checkout/controller_checkout.js" type="text/javascript"></script>

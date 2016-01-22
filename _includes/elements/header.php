@@ -17,20 +17,18 @@
             <li class="dropdown user user-menu">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                     <img src="../_templates/img/mart_icon160x160-01-01.png" class="user-image" alt="User Image">
-                    <span class="hidden-xs"><??></b></span>
+                    <span class="hidden-xs"><?= $username ?></span>
                 </a>
                 <ul class="dropdown-menu">
                     <!-- User image -->
                     <li class="user-header">
                         <img src="../_templates/img/mart_icon160x160-01-01.png" class="img-circle" alt="User Image">
-                        <p>
-                            <?= $username ?>
-                        </p>
+                        <p><?= $username ?></p>
                     </li>
                     <!-- Menu Footer-->
                     <li class="user-footer">
                         <div class="pull-right">
-                            <a href="#" class="btn btn-default btn-flat">Sign out</a>
+                            <a href="/WeltesMart/_includes/login/login_view.php" class="btn btn-default btn-flat">Sign out</a>
                         </div>
                     </li>
                 </ul>

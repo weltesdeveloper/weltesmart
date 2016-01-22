@@ -1,11 +1,6 @@
 <?php
 require_once '../../../_config/dbinfo.inc.php';
-session_start();
-// GENERATE THE APPLICATION PAGE
-$conn = oci_connect(ORA_CON_UN, ORA_CON_PW, ORA_CON_DB) or die;
 
-// 1. SET THE CLIENT IDENTIFIER AFTER EVERY CALL
-// 2. USING UNIQUE VALUE FOR BACK END USER
 switch ($_POST['param']) {
     case "show_data":
         $inv_type = $_POST['inv_type'];
@@ -31,40 +26,69 @@ switch ($_POST['param']) {
         ?>
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h4 class="modal-title text-center">List Image for Inventory <span id="inventory-id"></span></h4>
+            <h4 class="modal-title text-center">Print Album<span id="inventory-id"></span></h4>
         </div>
         <div class="modal-body">
-            <div class="col-sm-6">
-                <table class="table table-striped table-bordered" id="table-image">
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <div class="col-sm-2">
+                        <label>Judul Album : </label>
+                    </div>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="txt_judul_album" maxlength="50" placeholder="..Isikan judul Album" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-12">
+                <table class="table table-striped table-bordered" id="tbl_show_album">
                     <thead>
                         <tr>
-                            <th>No</th>
-                            <th>Image</th>
-                            <th>Action</th>
+                            <th>Inv ID</th>
+                            <th>Description</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
                     </tbody>
                 </table>
-            </div>
-            <div class="col-sm-6">
-                <table class="table table-striped table-bordered">
-                    <tr>
-                        <td>
-                            <input id="input-repl-2" type="file" class="file-loading" accept="image/*" multiple data-show-upload="true">
-                        </td>
-                    </tr>
-                </table>
-            </div>
+            </div>            
         </div>
         <div class="modal-footer">
+            <button type="button" class="btn btn-success" id="btn_submit_album">Print Album</button>
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
         </div>
+
+        <script type="text/javascript">
+            $('#tbl_show_album').find('tbody').empty();
+
+            var isi = "";
+            var baris = $('#tbl_mst_inv').DataTable().rows().nodes();
+            $('input[type = "checkbox"]:checked', baris).each(function (i, rows) {
+                var tr_row = $(this).closest('tr')[0];
+                var inv_id = $(tr_row).find('td:eq(1)').text();
+                var inv_desc = $(tr_row).find('td:eq(2)').text();
+
+                isi += "<tr>\n\
+                                <td>" + inv_id + "</td>\n\
+                                <td>" + inv_desc + "</td>\n\
+                            </tr>\n";
+
+            });
+            $('#tbl_show_album').find('tbody').html(isi);
+            $('#tbl_show_album').DataTable({
+                paging: false,
+                filter: false,
+                "order": [[1, 'asc']]
+            });
+
+            $('#btn_submit_album').click(function () {
+                if ($('#txt_judul_album').val() == '') {
+                    alert('Isi Judul PRint');
+                } else {
+                    printAlbum();
+                }
+            });
+        </script>
         <?php
         break;
 

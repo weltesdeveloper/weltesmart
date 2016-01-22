@@ -20,37 +20,64 @@ $s = $selisih->format("%a")
     <table class="table table-striped table-bordered" style="border: 1px ridge black;">
         <thead>  
             <tr>
-                <th colspan="<?php echo "3"; ?>">LAPORAN STOCK AWAL DAN STOCK AKHIR GUDANG PERIODE <?php echo "$tanggalMulai S/D $tanggalSelesai"; ?></th>
+                <th colspan="<?php echo "6"; ?>">LAPORAN STOCK AWAL DAN STOCK AKHIR GUDANG PERIODE <?php echo "$tanggalMulai S/D $tanggalSelesai"; ?></th>
             </tr>
             <tr>
                 <th style="border: 1px ridge black;">NO</th>
                 <th style="border: 1px ridge black;">NAMA BARANG</th>
                 <th style="border: 1px ridge black;" class='text-center'>STOK AWAL</th>
+                <th style="border: 1px ridge black;" class='text-center'>STOK IN</th>
+                <th style="border: 1px ridge black;" class='text-center'>STOK OUT</th>
                 <th style="border: 1px ridge black;" class='text-center'>STOK AKHIR</th>
             </tr>
         </thead>
         <tbody> 
             <?php
-            $sql = "WITH STOK_AKHIR
-     AS (  SELECT INV_ID, INV_STK_QTY HIST_ADJUST, INV_DESC
-             FROM MART_STOCK_INFO
-         --GROUP BY INV_ID
-         ORDER BY INV_ID ASC),
-     OUT
-     AS (  SELECT NVL (SUM (MART_WR_INV_QTY), 0) KELUAR, MART_WR_INV_ID, INV_DESC
-             FROM MART_CHECKOUT_INFO
-            WHERE MART_WR_DATE BETWEEN TO_DATE ('$start', 'MM/DD/YYYY')
-                                   AND TO_DATE ('$end', 'MM/DD/YYYY')
-         GROUP BY MART_WR_INV_ID,INV_DESC
-         ORDER BY MART_WR_INV_ID)
-SELECT STOK_AKHIR.INV_ID,
-       NVL (OUT.MART_WR_INV_ID, 0) MART_WR_INV_ID,
-       STOK_AKHIR.HIST_ADJUST,
-       NVL (OUT.KELUAR, 0) KELUAR,
-       STOK_AKHIR.INV_DESC,
-       STOK_AKHIR.HIST_ADJUST + NVL (OUT.KELUAR, 0) STOCK_AWAL
-  FROM STOK_AKHIR
-       FULL OUTER JOIN OUT ON OUT.MART_WR_INV_ID = STOK_AKHIR.INV_ID";
+            $sql = "SELECT MSI.INV_ID,
+         MSI.INV_DESC,
+         MSI.INV_STK_QTY AS STOCK_AKHIR,
+         X.MASUK,
+         X.KELUAR,
+         X.SELISIH,
+         MSI.INV_STK_QTY - X.SELISIH AS STOCK_AWAL
+    FROM MART_STOCK_INFO MSI
+         INNER JOIN
+         (WITH MASUK
+               AS (  SELECT MART_CHECKIN_INV_ID,
+                            SUM (MART_CHECKIN_INV_QTY) MART_CHECKIN_INV_QTY,
+                            MART_CHECKIN_DATE,
+                            MART_CHECKIN_SYSDATE
+                       FROM MART_DTL_CHKIN MDC
+                            INNER JOIN MART_MST_CHECKIN MMC
+                               ON MMC.MART_CHECKIN_ID = MDC.MART_CHECKIN_ID
+                      WHERE MART_CHECKIN_DATE BETWEEN TO_DATE ('$start',
+                                                               'MM/DD/YYYY')
+                                                  AND TO_DATE ('$end',
+                                                               'MM/DD/YYYY')
+                   GROUP BY MART_CHECKIN_INV_ID,
+                            MART_CHECKIN_DATE,
+                            MART_CHECKIN_SYSDATE),
+               KLR
+               AS (  SELECT NVL (SUM (MART_WR_INV_QTY), 0) KELUAR,
+                            MART_WR_INV_ID,
+                            INV_DESC
+                       FROM MART_CHECKOUT_INFO
+                      WHERE MART_WR_DATE BETWEEN TO_DATE ('$start',
+                                                          'MM/DD/YYYY')
+                                             AND TO_DATE ('$end',
+                                                          'MM/DD/YYYY')
+                   GROUP BY MART_WR_INV_ID, INV_DESC
+                   ORDER BY MART_WR_INV_ID)
+          SELECT KLR.MART_WR_INV_ID,
+                 KLR.INV_DESC,
+                 NVL (MASUK.MART_CHECKIN_INV_QTY, 0) MASUK,
+                 KLR.KELUAR,
+                 NVL (MASUK.MART_CHECKIN_INV_QTY, 0) - KLR.KELUAR AS SELISIH
+            FROM KLR
+                 FULL OUTER JOIN MASUK
+                    ON MASUK.MART_CHECKIN_INV_ID = KLR.MART_WR_INV_ID) X
+            ON MSI.INV_ID = X.MART_WR_INV_ID
+ORDER BY MSI.INV_DESC ASC";
             $parse = oci_parse($conn, $sql);
             oci_execute($parse);
             $i=1;
@@ -67,7 +94,13 @@ SELECT STOK_AKHIR.INV_ID,
                             <?php echo "$row[STOCK_AWAL]";?>
                         </td>
                         <td style="border: 1px ridge black; text-align: center;">
-                            <?php echo "$row[HIST_ADJUST]";?>
+                            <?php echo "$row[MASUK]";?>
+                        </td>
+                        <td style="border: 1px ridge black; text-align: center;">
+                            <?php echo "-$row[KELUAR]";?>
+                        </td>
+                        <td style="border: 1px ridge black; text-align: center;">
+                            <?php echo "$row[STOCK_AKHIR]";?>
                         </td>
                     </tr>
                 <?php

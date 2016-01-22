@@ -1,7 +1,7 @@
 <?php
 require_once('../../../_config/dbinfo.inc.php');
 require_once('../../../_config/misc.func.php');
-$conn = oci_connect(ORA_CON_UN, ORA_CON_PW, ORA_CON_DB) or die;
+
 $todaysDate = date("m/d/y");
 ?>
 <!-- Content Header (Page header) -->

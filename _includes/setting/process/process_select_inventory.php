@@ -1,9 +1,7 @@
 <?php
 
 require_once '../../../_config/dbinfo.inc.php';
-session_start();
-// GENERATE THE APPLICATION PAGE
-$conn = oci_connect(ORA_CON_UN, ORA_CON_PW, ORA_CON_DB) or die;
+
 $check = $_POST['check_id'];
 $inv_id = $_POST['inv_id'];
 

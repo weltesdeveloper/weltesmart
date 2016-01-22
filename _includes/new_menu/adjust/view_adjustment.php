@@ -1,7 +1,7 @@
 <?php
-require_once('../../_config/dbinfo.inc.php');
-require_once('../../_config/misc.func.php');
-$conn = oci_connect(ORA_CON_UN, ORA_CON_PW, ORA_CON_DB) or die;
+require_once('../../../_config/dbinfo.inc.php');
+require_once('../../../_config/misc.func.php');
+
 $todaysDate = date("m/d/y");
 ?>
 <!-- Content Header (Page header) -->
@@ -97,7 +97,7 @@ $todaysDate = date("m/d/y");
 
     <!--MODAL STOCK ADJUSTMENT-->
     <!-- Modal -->
-    <div id="myModal" class="modal fade modal-success" role="dialog">
+    <div id="modal-adjust" class="modal fade modal-success" role="dialog">
         <div class="modal-dialog modal-lg">
             <!-- Modal content-->
             <div class="modal-content">
@@ -122,7 +122,7 @@ $todaysDate = date("m/d/y");
                         <div class="form-group">
                             <label class="control-label col-sm-3">DATE</label>
                             <div class="col-sm-9"> 
-                                <input type="text" class="form-control" id="modal-date" readonly="" value="<?php echo date("m/d/Y");?>">
+                                <input type="text" class="form-control" id="modal-date" readonly="" value="<?php echo date("m/d/Y"); ?>">
                             </div>
                         </div>
                         <div class="form-group">
@@ -140,7 +140,7 @@ $todaysDate = date("m/d/y");
                         <div class="form-group">
                             <label class="control-label col-sm-3">REMARK</label>
                             <div class="col-sm-9"> 
-                                <textarea id="remark" class="form-control"></textarea>
+                                <textarea id="modal-remark" class="form-control"></textarea>
                             </div>
                         </div>
 
@@ -156,4 +156,4 @@ $todaysDate = date("m/d/y");
     </div>
 </section>
 
-<script src="../_includes/new_menu/js/controller.js"></script>
+<script src="../_includes/new_menu/adjust/controller_adjustment.js"></script>

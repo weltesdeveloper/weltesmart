@@ -1,10 +1,13 @@
 <?php
 require_once '../../../_config/dbinfo.inc.php';
 require_once '../../../_config/misc.func.php';
-// GENERATE THE APPLICATION PAGE
-$conn = oci_pconnect(ORA_CON_UN, ORA_CON_PW, ORA_CON_DB);
 
-$inv_type = $_GET['inv_type'];
+$judul = urldecode($_GET['judul']);
+$inv_id = urldecode($_GET['inv_id']);
+
+$concat_inv_id = str_replace("*", ',', $inv_id);
+$concat_inv_id = substr($concat_inv_id, 0, (strlen($concat_inv_id) - 1));
+//echo $concat_inv_id;
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -17,14 +20,14 @@ $inv_type = $_GET['inv_type'];
                 border: solid 1px black;
             }
             .tbl tr.tr_img{
-                height: 300px;
+                height: 210px;
             }
             .tbl tr.tr_nm th{
-                height: 70px;
+                height: 60px;
             }
             .tbl tr.tr_img td img{
-                height: 295px;
-                width:  295px;
+                height: 210px;
+                width:  210px;
             }
             .tbl tbody tr td{
                 padding:0px !important;						
@@ -38,14 +41,13 @@ $inv_type = $_GET['inv_type'];
             }
             .info{
                 background-color: graytext;
-                color: black;
                 font-weight: bold;
                 position: fixed;
                 top: 5 ;
                 width: 100%;
                 opacity: 0.7;
                 filter: alpha(opacity=70); /* For IE8 and earlier */
-                color: blue;
+                color: white;
                 //margin: 15px 0 15px 0;
             }
             @media print{
@@ -62,7 +64,7 @@ $inv_type = $_GET['inv_type'];
         <div class="info text-right">
             setting margin mozilla : left=10mm, right=5mm, top=5mm, bottom=5mm
             <br/>
-            POTRAIT PAPER
+            POTRAIT FOLIO PAPER
             <br/>
             <button class="btn btn-lg btn-success" style="opacity: 1;" onclick="window.print();
                     window.close();">PRINT</button>
@@ -70,7 +72,7 @@ $inv_type = $_GET['inv_type'];
         <table align="center" style="width:100%;" class="table-condensed" >
             <thead>
                 <tr>
-                    <th colspan="2"><img src="../../../_templates/img/logo.jpg" style="float: left;"></img><h2 style="float: right;">CONSUMABLE PHOTO GALLERY</h2></th>
+                    <th colspan="2"><img src="../../../_templates/img/logo.jpg" style="float: left;"></img><h2 style="float: right;"><?= $judul ?></h2></th>
                 </tr>
                 <tr>                           
                     <th class="text-center" style="font-style: italic;">Inventori Name</th>
@@ -80,17 +82,7 @@ $inv_type = $_GET['inv_type'];
             <tbody>
                 <?php
                 $i = 0;
-                $j = 0;
-                $sql = "SELECT "
-                        . "INV_ID, "
-                        . "INV_DESC_CONCAT, "
-                        . "INV_TYPE, "
-                        . "NVL(INV_WH_LOC, '-') INV_WH_LOC,"
-                        . "INV_IMG "
-                        . "FROM VW_INV_IMG "
-                        . "WHERE INV_WM_SELECT = '1' "
-                        . "ORDER BY INV_DESC_CONCAT ASC";
-                if ($inv_type != '%') {
+                $j = 0;                
                     $sql = "SELECT "
                             . "INV_ID, "
                             . "INV_DESC_CONCAT, "
@@ -98,9 +90,9 @@ $inv_type = $_GET['inv_type'];
                             . "NVL(INV_WH_LOC, '-') INV_WH_LOC,"
                             . "INV_IMG "
                             . "FROM VW_INV_IMG "
-                            . "WHERE INV_WM_SELECT = '1' AND INV_TYPE = '$inv_type' "
+                            . "WHERE INV_WM_SELECT = '1' AND INV_ID in ($concat_inv_id)"
                             . "ORDER BY INV_DESC_CONCAT ASC";
-                }
+                
                 //echo $sql;
                 $sqlPck = oci_parse($conn_wenloginv, $sql);
                 oci_execute($sqlPck);
@@ -128,15 +120,16 @@ $inv_type = $_GET['inv_type'];
                                             </td>                                            
                                         </tr>
                                         <tr>
-                                            <td style="vertical-align: top;font-size: 12px;height: 10px;">
-                                                Inv ID : <i><small><?= $rowPck['INV_ID']; ?></small></i>                                                
+                                            <td style="vertical-align: bottom;font-size: 13px;height: 10px;">
+                                                &nbsp;                                                
                                             </td>     
                                             <td style="width: 80px;" class="text-center" rowspan="2">
                                                 <span id="<?= "img_qr_$i" . "_$j" ?>" data-id="<?= $rowPck['INV_ID']; ?>"></span>                                                
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td style="vertical-align: top;font-size: 12px;">
+                                            <td style="vertical-align: bottom;font-size: 13px;">
+                                                INV ID : <i><small><?= $rowPck['INV_ID']; ?></small></i></br>
                                                 <?= "Location : <br/>" . $rowPck['INV_WH_LOC']; ?>
                                             </td>
                                         </tr>
@@ -162,15 +155,16 @@ $inv_type = $_GET['inv_type'];
                                             </td>                                            
                                         </tr>
                                         <tr>
-                                            <td style="vertical-align: top;font-size: 12px;height: 10px;">
-                                                Inv ID : <i><small><?= $rowPck['INV_ID']; ?></small></i>                                                
+                                            <td style="vertical-align: bottom;font-size: 13px;height: 10px;">
+                                                &nbsp;
                                             </td>     
                                             <td style="width: 80px;" class="text-center" rowspan="2">
                                                 <span id="<?= "img_qr_$i" . "_$j" ?>" data-id="<?= $rowPck['INV_ID']; ?>"></span>                                                
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td style="vertical-align: top;font-size: 12px;">
+                                            <td style="vertical-align: top;font-size: 13px;">
+                                                INV ID : <i><small><?= $rowPck['INV_ID']; ?></small></i></br>
                                                 <?= "Location : <br/>" . $rowPck['INV_WH_LOC']; ?>
                                             </td>
                                         </tr>

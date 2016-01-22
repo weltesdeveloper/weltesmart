@@ -6,19 +6,19 @@
             <img src="../_templates/img/mart_icon160x160-01-01.png" class="img-circle" alt="User Image">
         </div>
         <div class="pull-left info">
-            <p><? ?></p>
-            <a href="#"><i class="fa fa-sitemap text-success"></i> <?php //echo $companyRole;    ?></a>
+            <p><?= $username ?></p>
+            <a href="#"><i class="fa fa-sitemap text-success"></i> <?php echo $user_role; ?></a>
         </div>
     </div>
 
     <!-- search form -->
-    <div class="input-group">
-        <select class="selectpicker" data-style="btn-primary" data-width="300px" title="Quick Report..">
-            <option>Report 1</option>
-            <option>Report 2</option>
-            <option>Report 3</option>
-        </select>
-    </div>
+    <!--    <div class="input-group">
+            <select class="selectpicker" data-style="btn-primary" data-width="300px" title="Quick Report..">
+                <option>Report 1</option>
+                <option>Report 2</option>
+                <option>Report 3</option>
+            </select>
+        </div>-->
 
     <ul class="sidebar-menu">
         <li class="header">MAIN MENU</li>
@@ -32,11 +32,11 @@
         </li>
         <li class="">
             <a href="#">
-                <i class="fa fa-gear"></i> <span>Check IN/OUT</span> <i class="fa fa-angle-left pull-right"></i>
+                <i class="fa fa-gear"></i> <span>Check OUT</span> <i class="fa fa-angle-left pull-right"></i>
             </a>
-            <ul class="treeview-menu">
-                <!--<li><a onclick="checkout('CHECKIN')" style="cursor: pointer;"><i class="fa fa-sign-in text-success"></i> <span>Consumable Check In</span></a></li>-->
-                <li><a onclick="checkout('CHECKOUT')" style="cursor: pointer;"><i class="fa fa-sign-out text-warning"></i> <span>Consumable Check Out</span></a></li>
+            <ul class="treeview-menu">                
+                <li><a onclick="checkout('CHECKOUT')" style="cursor: pointer;"><i class="fa fa-sign-out text-warning"></i> <span>By Select</span></a></li>
+                <li><a onclick="checkout('CHECKOUT_BARCODE')" style="cursor: pointer;"><i class="fa fa-sign-out text-success"></i> <span>By Barcode</span></a></li>
             </ul>
         </li>
         <li class="">
@@ -65,7 +65,12 @@
             </a>
             <ul class="treeview-menu">
                 <!--<li><a onclick="report('STOCK_ON_HAND')" style="cursor: pointer;"><i class="fa fa-truck"></i> Stock On Hand</a></li>-->
-                <li><a onclick="new_menu('NEW_ADJUST')" style="cursor: pointer;"><i class="fa fa-sign-in"></i> Stock Adjustment</a></li>
+                <li><a onclick="new_menu('NEW_ADJUST')" style="cursor: pointer;">
+                        <i class="fa fa-sign-in"></i> Adjustment Stock</a>
+                </li>
+                <li><a onclick="new_menu('NEW_CHECKOUT')" style="cursor: pointer;">
+                        <i class="fa fa-sign-out"></i> Check Out Stock</a>
+                </li>
             </ul>
         </li>
     </ul>
@@ -282,6 +287,19 @@
                     }
                 });
                 break; // END OF CASE
+
+            case "CHECKOUT_BARCODE":
+                $.ajax({
+                    url: "../_includes/checkout_barcode/view_checkout.php",
+                    data: {},
+                    beforeSend: function (xhr) {
+                        $('#maincontent').html();
+                    },
+                    success: function (response, textStatus, jqXHR) {
+                        $('#maincontent').html(response);
+                    }
+                });
+                break; // END OF CASE
         }
     }
 
@@ -289,7 +307,20 @@
         switch (param) {
             case "NEW_ADJUST":
                 $.ajax({
-                    url: "../_includes/new_menu/adjustment.php",
+                    url: "../_includes/new_menu/adjust/view_adjustment.php",
+                    data: {},
+                    beforeSend: function (xhr) {
+                        $('#maincontent').html();
+                    },
+                    success: function (response, textStatus, jqXHR) {
+                        $('#maincontent').html(response);
+                    }
+                });
+                break;
+
+            case "NEW_CHECKOUT":
+                $.ajax({
+                    url: "../_includes/new_menu/checkout/view_checkout.php",
                     data: {},
                     beforeSend: function (xhr) {
                         $('#maincontent').html();
