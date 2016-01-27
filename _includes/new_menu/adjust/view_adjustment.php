@@ -60,7 +60,8 @@ $todaysDate = date("m/d/y");
         <div class="col-md-12">
             <div class="box box-default box-solid">
                 <div class="box-header with-border">
-                    <h3 class="box-title"><b>MAIN INVENTORY</b> ~ <span id="specific-inv-info">ALL</span> <small>You can set stock adjustment or even make some adjustment to the minimum stock warning</small></h3>
+                    <h3 class="box-title"><b>MAIN INVENTORY</b> ~</h3>
+                    <b><u><i><a href="#" style="color: red; font-size: 17px;">ADJUSTMENT INVENTORY ADALAH UNIT YANG TERKECIL (Pcs, Roll, Kg ...)</a></i></u></b>
                     <div class="box-tools pull-right">
                         <!--<button class="btn btn-xs btn-default"><i class="fa fa-key"></i>&nbsp;TOGGLE ADJUSTMENT</button>-->
                         <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
@@ -103,7 +104,7 @@ $todaysDate = date("m/d/y");
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title text-center">Adjust Inventory <span id="modal-header-invid"></span></h4>
+                    <h4 class="modal-title text-center">FORM ADJUST INVENTORY <span id="modal-header-invid" class="text-black"></span></h4>
                 </div>
                 <div class="modal-body">
                     <form class="form-horizontal" role="form">
@@ -134,13 +135,22 @@ $todaysDate = date("m/d/y");
                         <div class="form-group">
                             <label class="control-label col-sm-3">UNIT</label>
                             <div class="col-sm-9"> 
-                                <input type="text" class="form-control" id="modal-unit">
+                                <select class="selectpicker" id="modal-unit" data-live-search="true" data-width="100%">
+                                    <!--<option value="Box">Box</option>-->
+                                    <!--<option value="Dos">Dos</option>-->
+                                    <!--<option value="Dz">Dz</option>-->
+                                    <option value="Pcs">Pcs</option>
+                                    <option value="Kg">Kg</option>
+                                    <option value="Roll">Roll</option>
+                                    <!--<option value="Set">Set</option>-->
+                                    <!--<option value="Tbg">Tabung</option>-->
+                                </select>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="control-label col-sm-3">REMARK</label>
                             <div class="col-sm-9"> 
-                                <textarea id="modal-remark" class="form-control"></textarea>
+                                <textarea id="modal-remark" class="form-control" placeholder="NB : Remark Tidak Boleh Kosong"></textarea>
                             </div>
                         </div>
 

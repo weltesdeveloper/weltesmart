@@ -106,7 +106,7 @@ $todaysDate = date("m/d/y");
     $('.selectpicker').selectpicker();
     $("#start").datepicker();
     $("#end").datepicker();
-    
+
     $("#stock-start").datepicker();
     $("#stock-end").datepicker();
 
@@ -116,9 +116,9 @@ $todaysDate = date("m/d/y");
         var end = $('#end').val();
 
         window.open("../_resources/tools/PHPToExcel/report_excel.php?job=" + job + "&start=" + start + "&end=" + end);
-    }   
-    
-    function PrintData2(){
+    }
+
+    function PrintData2() {
         var start = $('#stock-start').val();
         var end = $('#stock-end').val();
         window.open("../_resources/tools/PHPToExcel/report_excel2.php?start=" + start + "&end=" + end);

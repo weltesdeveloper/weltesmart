@@ -153,33 +153,42 @@ switch ($_POST['action']) {
 
     case 'show_modal_inv_dtl':
         $inv_id = $_POST['inv_id'];
+        $stk_qty = $_POST['stk_qty'];
         $inv_desc = SingleQryFld("SELECT INV_DESC FROM MART_STOCK_INFO WHERE INV_ID = '$inv_id' ", $conn);
+        $counter = $_POST['counter'];
         ?>
         <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
             <h4 class="modal-title text-center">ISI JUMLAH YANG DI AMBIL</h4>
         </div>
         <div class="modal-body">
-            <div class="form-control">
-                <label class="text-aqua fa-2x"><?= $inv_desc ?></label>
-            </div>
-            <div class='form-control'>
-                <div class="col-sm-2">
-                    <label>QTY</label>
+            <div class="row">
+                <div class="col-sm-12">
+                    <label class="text-aqua fa-2x"><?= $inv_desc ?></label>
                 </div>
-                <div class="col-sm-2">
-                    <input class="form-control" value="1" id="modal_txt_qty" />
+            </div>
+            <div class="row">
+                <div class='col-sm-12'>
+                    <div class="col-sm-4">
+                        <label>SISA STOK</label>
+                    </div>
+                    <div class="col-sm-8">
+                        <label><?= round($stk_qty) ?></label>
+                    </div>
+                </div>
+                <div class='col-sm-12'>
+                    <div class="col-sm-4">
+                        <label>QTY DIAMBIL</label>
+                    </div>
+                    <div class="col-sm-8">
+                        <input class="form-control" type="text" value="1" id="modal_txt_qty" />
+                    </div>
                 </div>
             </div>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-success" data-dismiss="modal">Submit</button>
-            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-        </div>
-
-        <script type="text/javascript">
-            
-        </script>
+            <button type="button" class="btn btn-success" onclick="updateQty(<?= $counter ?>)" id="btn_submit_qty">Submit</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal" onclick="DeleteItem(<?= $counter ?>)">Cancel</button>
+        </div>        
         <?php
         break;
 }

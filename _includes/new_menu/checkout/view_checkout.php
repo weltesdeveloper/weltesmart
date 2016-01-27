@@ -94,7 +94,7 @@
             <div class="box box-solid box-default">
                 <div class="box-header with-border">
                     <h3 class="box-title"><b>Check Out Item</b></h3> : 
-                    <!--<b><a href="#" id="wh-receipt" data-type="text" data-pk="1" data-url="/post" data-title="Enter New Warehouse #">WEN-WH-JOB-SUBJOB-000001</a></b>-->
+                    <b><u><i><a href="#" style="color: red; font-size: 17px;">CHECK OUT INVENTORY ADALAH UNIT YANG TERKECIL (Pcs, Roll, Kg ...)</a></i></u></b>
                     <div class="box-tools pull-right">
                         <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                     </div>

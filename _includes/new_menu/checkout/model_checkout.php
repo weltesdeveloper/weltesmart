@@ -60,7 +60,11 @@ switch ($_POST['action']) {
         break;
     case "get_inventory":
         $response = array();
-        $sql = "SELECT * FROM MART_STOCK_INFO WHERE INV_STK_QTY <> 0 ORDER BY INV_DESC ASC";
+        $sql = "SELECT INV_ID, SUM (TRANS_QTY) TRANS_QTY, INV_DESC
+    FROM VW_STOCK_HIST
+   WHERE INV_DESC LIKE 'Inventory Testing Gudang%'
+GROUP BY INV_ID, INV_DESC
+ORDER BY INV_DESC ASC";
         $parse = oci_parse($conn, $sql);
         oci_execute($parse);
         while ($row = oci_fetch_array($parse)) {
@@ -145,7 +149,7 @@ switch ($_POST['action']) {
 
     case "check_max":
         $inv_id = $_POST['inv_id'];
-        $sql = "SELECT INV_STK_QTY FROM MART_STK_ADJ WHERE INV_ID = '$inv_id'";
+        $sql = "SELECT SUM(TRANS_QTY)TRANS_QTY FROM VW_STOCK_HIST WHERE INV_ID = '$inv_id'";
         $parse = oci_parse($conn, $sql);
         oci_execute($parse);
         $response = array();

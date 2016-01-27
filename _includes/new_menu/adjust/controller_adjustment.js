@@ -1,6 +1,7 @@
 $(document).ready(function () {
     $('.selectpicker').selectpicker();
     $('#modal-date').datepicker();
+    $('#modal-qty').autoNumeric('init');
     LoadData();
 });
 
@@ -34,7 +35,7 @@ function LoadData() {
                                 "targets": [2],
                                 "className": 'text-center',
                                 "render": function (data, type, row, meta) {
-                                    var isi = "<a style='cursor:pointer;' id='adjust" + row.INV_ID + "' onclick=Adjust('" + row.INV_ID + "')>"+row.QTY+"</a>";
+                                    var isi = "<a style='cursor:pointer;' id='adjust" + row.INV_ID + "' onclick=Adjust('" + row.INV_ID + "')>" + row.QTY + "</a>";
                                     return isi;
                                 }
                             },
@@ -77,35 +78,28 @@ function LoadData() {
 
 function Adjust(param) {
     console.log(param);
-//    $.ajax({
-//        type: 'POST',
-//        data: {inv_id: param, action: "get_inv_stock"},
-//        url: "../_includes/new_menu/adjust/model_adjustment.php",
-//        dataType: 'JSON',
-//        success: function (response, textStatus, jqXHR) {
-//            $('#modal-header-invid').text(param);
-//            $('#modal-invid').val(param);
-//            $.each(response, function (key, value) {
-//                $('#modal-invdesc').val(value.INV_DESC);
-//            });
-//            $('#modal-adjust').modal('show');
-//        }
-//    });
-    $('#modal-adjust').modal('show');
-}
-
-function resetForm() {
-    $('#modal-invid').val("");
-    $('#modal-date').val("");
-    $('#modal-qty').val("");
-    $('#modal-unit').val("");
     $('#modal-remark').val("");
+    $.ajax({
+        type: 'POST',
+        data: {inv_id: param, action: "get_inv_stock"},
+        url: "../_includes/new_menu/adjust/model_adjustment.php",
+        dataType: 'JSON',
+        success: function (response, textStatus, jqXHR) {
+            $.each(response, function (key, value) {
+                $('#modal-invid').val(value.INV_ID);
+                $('#modal-invdesc').val(value.INV_DESC);
+                $('#modal-qty').val(value.QTY);
+                $('#modal-header-invid').text(value.INV_DESC);
+            });
+            $('#modal-adjust').modal('show');
+        }
+    });
 }
 
 function SubmitAdjust() {
     var inv_id = $('#modal-invid').val();
     var date = $('#modal-date').val();
-    var qty = $('#modal-qty').val();
+    var qty = $('#modal-qty').autoNumeric('get');
     var unit = $('#modal-unit').val();
     var remark = $('#modal-remark').val();
 
@@ -119,18 +113,25 @@ function SubmitAdjust() {
     };
     console.log(sentReq);
 
-    $.ajax({
-        type: 'POST',
-        data: sentReq,
-        url: "../_includes/new_menu/adjust/model_adjustment.php",
-        dataType: 'JSON',
-        success: function (response, textStatus, jqXHR) {
-            if (response == "BERHASIL INPUT") {
-                alert(response);
-                $('#myModal').modal('hide');
-            } else {
-                alert(response);
+    if (qty == "") {
+        alert("QTY TIDAK BOLEH KOSONG");
+    } else if (remark == "") {
+        alert("REMARK TIDAK BOLEH KOSONG");
+    } else {
+        $.ajax({
+            type: 'POST',
+            data: sentReq,
+            url: "../_includes/new_menu/adjust/model_adjustment.php",
+            dataType: 'JSON',
+            success: function (response, textStatus, jqXHR) {
+                if (response.status == "BERHASIL INPUT") {
+                    alert(response.status);
+                    $('#modal-adjust').modal('hide');
+                    $('#adjust' + inv_id).text(response.qty);
+                } else {
+                    alert(response.status);
+                }
             }
-        }
-    });
+        });
+    }
 }

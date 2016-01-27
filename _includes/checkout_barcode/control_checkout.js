@@ -92,23 +92,27 @@ function show_autocomplete() {
         }
     });
 }
-function show_modal_inv(inv_id) {
+function show_modal_inv(inv_id, stk_qty, callback) {
     $.ajax({
         url: "checkout_barcode/model_checkout.php",
         type: 'POST',
+        async: false,
         data: {
             action: 'show_modal_inv_dtl',
-            inv_id: inv_id
+            inv_id: inv_id,
+            stk_qty: stk_qty,
+            counter: counter
         },
         beforeSend: function (xhr) {
-            elmnt_utama.find('#myModal .modal-content').empty();
+            elmnt_utama.find('#myModal .modal-dialog')
+                    .css('width', '500px');
+            elmnt_utama.find('#myModal .modal-content')
+                    .empty();
         },
         success: function (respon, textStatus, jqXHR) {
             elmnt_utama.find('#myModal .modal-content').html(respon);
         },
-        complete: function () {
-            elmnt_utama.find('#myModal').modal('show');
-        }
+        complete: callback
     });
 }
 
@@ -128,6 +132,25 @@ function addToTable(inv_id) {
         success: function (response, textStatus, jqXHR) {
             //console.log(response);
             if (response[0] != false) {
+                show_modal_inv(inv_id, response[0].INV_STK_QTY, function (resp) {
+                    elmnt_utama.find('#myModal').modal('show');
+                    elmnt_utama.find('#myModal').find('#modal_txt_qty').autoNumeric('init', {
+                        vMin: 0,
+                        vMax: response[0].INV_STK_QTY
+                    });
+
+                    elmnt_utama.find('#myModal').find('#modal_txt_qty').on('keypress', function (e) {
+                        var code = e.keyCode || e.which;
+                        if (code == 32) { //Enter keycode
+                            elmnt_utama.find('#myModal').find('#btn_submit_qty').click();
+                        }
+                    });
+
+                    setTimeout(function () {
+                        elmnt_utama.find('#myModal').find('#modal_txt_qty').focus().select();
+                    }, 500);
+                });
+
                 var new_row = table_init.row.add([
                     response[0].INV_DESC + '<input type="hidden" id="inv_id" value="' + response[0].INV_ID + '" />',
                     "<span>" + response[0].INV_STK_QTY + "</span>",
@@ -146,12 +169,23 @@ function addToTable(inv_id) {
                 });
 
                 already_inv_id.push(row.INV_ID);
-                //console.log(already_inv_id);
+                //console.log(already_inv_id);          
                 counter++;
             }
-            elmnt_utama.find('#txt_scanid').focus().val('');
+            elmnt_utama.find('#txt_scanid').val('');
         }
     });
+}
+function updateQty(param) {
+    var txt = elmnt_utama.find('#myModal').find('#modal_txt_qty').val();
+    if (txt == '0' || txt == '') {
+        alert('QTY HARUS DI ISI.');
+        elmnt_utama.find('#myModal').find('#modal_txt_qty').focus();
+    } else {
+        $('#qty' + param).val(txt);
+        elmnt_utama.find('#txt_scanid').focus().val('');
+        elmnt_utama.find('#myModal').modal('hide');
+    }
 }
 function DeleteItem(param) {
     var tr = $('#qty' + param).closest('tr')[0];
@@ -182,7 +216,7 @@ function SubmitBonGudang() {
     for (var x = 0; x < baris.length; x++) {
         if ($(baris[x]).find("td:eq(0)").find("input").val() != "") {
             inv_id.push($(baris[x]).find("td:eq(0)").find("input").val());
-            qty.push($(baris[x]).find("td:eq(2)").find("input").val());
+            qty.push($(baris[x]).find("td:eq(2)").find("input").autoNumeric('get'));
         }
     }
 

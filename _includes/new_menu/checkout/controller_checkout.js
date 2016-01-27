@@ -74,7 +74,7 @@ function AddItem() {
         "<select class='selectpicker' data-live-search='true' data-width='100%' title='Select Inventory...' id='inventory-detail-drop" + counter + "' onchange=ChangeInventory('" + counter + "')></select>",
         "<span id='max" + counter + "'></span>",
         "<input type='number' class='form-control' style='width: -moz-available;' value='1' min='0' id='qty" + counter + "' onchange=ChangeQty('" + counter + "')>",
-        "<input type='text' class='form-control' style='width: -moz-available;'/></div>",
+        "<select class='selectpicker' data-live-search='true' data-width='100%' title='Select Unit' id='inv-unit" + counter + "'></select>",
         "",
         "<i class='fa fa-trash fa-fw fa-lg text-danger' style='cursor: pointer;' onclick=DeleteItem(" + counter + ")></i>"
     ]);
@@ -90,10 +90,10 @@ function AddItem() {
     $('td', nTr)[2].setAttribute('class', 'text-center');
     $('td', nTr)[3].setAttribute('class', 'text-center');
     $('td', nTr)[4].setAttribute('class', 'text-center');
+    $('td', nTr)[5].setAttribute('class', 'text-center');
     $('.selectpicker').selectpicker();
 
-    $('#inventory-detail-drop' + counter).each(function (index, value)
-    {
+    $('#inventory-detail-drop' + counter).each(function (index, value) {
         var initSelectpicker = $(this).selectpicker();
         $.ajax({
             type: 'POST',
@@ -113,6 +113,11 @@ function AddItem() {
                 initSelectpicker.selectpicker('refresh');
             }
         });
+    });
+    $('#inv-unit' + counter).each(function (index, value) {
+        var initSelectpicker2 = $(this).selectpicker();
+        initSelectpicker2.append("<option value='Kg'>Kg</option><option value='Pcs' selected=''>Pcs</option><option value='Roll'>Roll</option>");
+        initSelectpicker2.selectpicker('refresh');
     });
     counter++;
 }
@@ -202,13 +207,13 @@ function ChangeInventory(param) {
         data: {action: "check_max", inv_id: inv_id},
         dataType: "JSON",
         success: function (response, textStatus, jqXHR) {
-            if (response[0].INV_STK_QTY == 0) {
+            if (response[0].TRANS_QTY == 0) {
                 $('#qty' + param).val("0");
 
             } else {
-                $('#qty' + param).removeAttr("max").attr("max", response[0].INV_STK_QTY);
+                $('#qty' + param).removeAttr("max").attr("max", response[0].TRANS_QTY);
             }
-            $('#max' + param).text(response[0].INV_STK_QTY);
+            $('#max' + param).text(response[0].TRANS_QTY);
         }
     });
 }

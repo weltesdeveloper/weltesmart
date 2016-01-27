@@ -44,9 +44,9 @@ $s = $selisih->format("%a")
          INNER JOIN
          (WITH MASUK
                AS (  SELECT MART_CHECKIN_INV_ID,
-                            SUM (MART_CHECKIN_INV_QTY) MART_CHECKIN_INV_QTY,
-                            MART_CHECKIN_DATE,
-                            MART_CHECKIN_SYSDATE
+                            SUM (MART_CHECKIN_INV_QTY) MART_CHECKIN_INV_QTY--,
+                            --MART_CHECKIN_DATE,
+                            --MART_CHECKIN_SYSDATE
                        FROM MART_DTL_CHKIN MDC
                             INNER JOIN MART_MST_CHECKIN MMC
                                ON MMC.MART_CHECKIN_ID = MDC.MART_CHECKIN_ID
@@ -54,9 +54,10 @@ $s = $selisih->format("%a")
                                                                'MM/DD/YYYY')
                                                   AND TO_DATE ('$end',
                                                                'MM/DD/YYYY')
-                   GROUP BY MART_CHECKIN_INV_ID,
-                            MART_CHECKIN_DATE,
-                            MART_CHECKIN_SYSDATE),
+                   GROUP BY MART_CHECKIN_INV_ID--,
+                            --MART_CHECKIN_DATE,
+                            --MART_CHECKIN_SYSDATE
+                            ),
                KLR
                AS (  SELECT NVL (SUM (MART_WR_INV_QTY), 0) KELUAR,
                             MART_WR_INV_ID,
@@ -78,6 +79,7 @@ $s = $selisih->format("%a")
                     ON MASUK.MART_CHECKIN_INV_ID = KLR.MART_WR_INV_ID) X
             ON MSI.INV_ID = X.MART_WR_INV_ID
 ORDER BY MSI.INV_DESC ASC";
+//            echo "$sql";
             $parse = oci_parse($conn, $sql);
             oci_execute($parse);
             $i=1;
