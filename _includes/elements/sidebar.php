@@ -10,24 +10,14 @@
             <a href="#"><i class="fa fa-sitemap text-success"></i> <?php echo $user_role; ?></a>
         </div>
     </div>
-
-    <!-- search form -->
-    <!--    <div class="input-group">
-            <select class="selectpicker" data-style="btn-primary" data-width="300px" title="Quick Report..">
-                <option>Report 1</option>
-                <option>Report 2</option>
-                <option>Report 3</option>
-            </select>
-        </div>-->
-
     <ul class="sidebar-menu">
         <li class="header">MAIN MENU</li>
         <li class="">
             <a href="#">
-                <i class="fa fa-briefcase"></i> <span> Inventory Control</span> <i class="fa fa-angle-left pull-right"></i>
+                <i class="fa fa-briefcase"></i> <span> Inventory Adjustment</span> <i class="fa fa-angle-left pull-right"></i>
             </a>
             <ul class="treeview-menu">
-                <li><a onclick="inventory('ADJUST')" style="cursor: pointer;"><i class="fa fa-terminal"></i> Inventory Adjustment</a></li>
+                <li><a onclick="new_menu('NEW_ADJUST')" style="cursor: pointer;"><i class="fa fa-terminal"></i> Inventory Adjustment</a></li>
             </ul>
         </li>
         <li class="">
@@ -35,7 +25,7 @@
                 <i class="fa fa-gear"></i> <span>Check OUT</span> <i class="fa fa-angle-left pull-right"></i>
             </a>
             <ul class="treeview-menu">                
-                <li><a onclick="checkout('CHECKOUT')" style="cursor: pointer;"><i class="fa fa-sign-out text-warning"></i> <span>By Select</span></a></li>
+                <li><a onclick="new_menu('NEW_CHECKOUT')" style="cursor: pointer;"><i class="fa fa-sign-out text-warning"></i> <span>By Select</span></a></li>
                 <li><a onclick="checkout('CHECKOUT_BARCODE')" style="cursor: pointer;"><i class="fa fa-sign-out text-success"></i> <span>By Barcode</span></a></li>
             </ul>
         </li>
@@ -44,7 +34,6 @@
                 <i class="fa fa-gear"></i> <span>Setting Inventory</span> <i class="fa fa-angle-left pull-right"></i>
             </a>
             <ul class="treeview-menu">
-                <li><a onclick="setting('GLOBAL')" style="cursor: pointer;"><i class="fa fa-globe"></i> Global Setting</a></li>
                 <li><a onclick="setting('MASTER_INV')" style="cursor: pointer;"><i class="fa fa-cubes"></i> Master Inventory</a></li>
                 <li><a onclick="setting('ALBUM')" style="cursor: pointer;"><i class="fa fa-sitemap"></i> Inventory Library</a></li>
             </ul>
@@ -54,7 +43,13 @@
                 <i class="fa fa-print"></i> <span> Reports</span> <i class="fa fa-angle-left pull-right"></i>
             </a>
             <ul class="treeview-menu">
-                <li><a onclick="report('STOCK_ON_HAND')" style="cursor: pointer;"><i class="fa fa-truck"></i> Stock On Hand</a></li>
+                <li><a onclick="new_menu('HIST_CHECKOUT')" style="cursor: pointer;">
+                        <i class="fa fa-sign-out"></i> History Check Out</a>
+                </li>
+                <li><a onclick="new_menu('HIST_CHECKIN')" style="cursor: pointer;">
+                        <i class="fa fa-sign-out"></i> History Check In</a>
+                </li>
+                <!--<li><a onclick="report('STOCK_ON_HAND')" style="cursor: pointer;"><i class="fa fa-truck"></i> Stock On Hand</a></li>-->
                 <li><a onclick="report('CHECKOUT_SUMM')" style="cursor: pointer;"><i class="fa fa-sign-out"></i> Checkout Summary</a></li>
             </ul>
         </li>
@@ -64,12 +59,17 @@
                 <i class="fa fa-print"></i> <span> TestingData</span> <i class="fa fa-angle-left pull-right"></i>
             </a>
             <ul class="treeview-menu">
-                <!--<li><a onclick="report('STOCK_ON_HAND')" style="cursor: pointer;"><i class="fa fa-truck"></i> Stock On Hand</a></li>-->
                 <li><a onclick="new_menu('NEW_ADJUST')" style="cursor: pointer;">
                         <i class="fa fa-sign-in"></i> Adjustment Stock</a>
                 </li>
                 <li><a onclick="new_menu('NEW_CHECKOUT')" style="cursor: pointer;">
                         <i class="fa fa-sign-out"></i> Check Out Stock</a>
+                </li>
+                <li><a onclick="new_menu('REV_CHECKOUT')" style="cursor: pointer;">
+                        <i class="fa fa-sign-out"></i> Revision Check Out</a>
+                </li>
+                <li><a onclick="new_menu('HIST_CHECKOUT')" style="cursor: pointer;">
+                        <i class="fa fa-sign-out"></i> History Check Out</a>
                 </li>
             </ul>
         </li>
@@ -321,6 +321,42 @@
             case "NEW_CHECKOUT":
                 $.ajax({
                     url: "../_includes/new_menu/checkout/view_checkout.php",
+                    data: {},
+                    beforeSend: function (xhr) {
+                        $('#maincontent').html();
+                    },
+                    success: function (response, textStatus, jqXHR) {
+                        $('#maincontent').html(response);
+                    }
+                });
+                break;
+            case "REV_CHECKOUT":
+                $.ajax({
+                    url: "../_includes/new_menu/rev_checkout/view_rev_checkout.php",
+                    data: {},
+                    beforeSend: function (xhr) {
+                        $('#maincontent').html();
+                    },
+                    success: function (response, textStatus, jqXHR) {
+                        $('#maincontent').html(response);
+                    }
+                });
+                break;
+            case "HIST_CHECKOUT":
+                $.ajax({
+                    url: "../_includes/new_menu/history_checkout/view_hist_checkout.php",
+                    data: {},
+                    beforeSend: function (xhr) {
+                        $('#maincontent').html();
+                    },
+                    success: function (response, textStatus, jqXHR) {
+                        $('#maincontent').html(response);
+                    }
+                });
+                break;
+            case "HIST_CHECKIN":
+                $.ajax({
+                    url: "../_includes/new_menu/history_checkin/view_hist_checkin.php",
                     data: {},
                     beforeSend: function (xhr) {
                         $('#maincontent').html();

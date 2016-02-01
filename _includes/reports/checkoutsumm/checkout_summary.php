@@ -28,30 +28,22 @@ $todaysDate = date("m/d/y");
                 <div class="box-body">
                     <form class="form-horizontal" role="form">
                         <div class="form-group">
-                            <label class="control-label col-sm-2" for="email">JOB</label>
-                            <div class="col-sm-10">
-                                <select class="selectpicker" data-live-search="true" data-width="100%" id="job">
-                                    <?php
-                                    $sql = "SELECT DISTINCT MART_WR_JOB FROM MART_MST_CHKOUT ORDER BY MART_WR_JOB ASC";
-                                    $parse = oci_parse($conn, $sql);
-                                    oci_execute($parse);
-                                    while ($row = oci_fetch_array($parse)) {
-                                        echo "<option value='$row[MART_WR_JOB]'>$row[MART_WR_JOB]</option>";
-                                    }
-                                    ?>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group">
                             <label class="control-label col-sm-2" for="pwd">START DATE</label>
                             <div class="col-sm-10"> 
-                                <input type="text" class="form-control" id="start" placeholder="Enter password" value="<?php echo date("m/d/Y"); ?>">
+                                <input type="text" class="form-control" id="start" value="<?php echo date("m/d/Y"); ?>" onchange    ="ChageStart();">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="control-label col-sm-2" for="pwd">END DATE</label>
                             <div class="col-sm-10"> 
-                                <input type="text" class="form-control" id="end" placeholder="Enter password" value="<?php echo date("m/d/Y"); ?>">
+                                <input type="text" class="form-control" id="end" value="<?php echo date("m/d/Y"); ?>" onchange="ChageStart();">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-2" for="email">JOB</label>
+                            <div class="col-sm-10">
+                                <select class="selectpicker" data-live-search="true" data-width="100%" id="job">
+                                </select>
                             </div>
                         </div>
                         <div class="form-group"> 
@@ -81,13 +73,13 @@ $todaysDate = date("m/d/y");
                         <div class="form-group">
                             <label class="control-label col-sm-2" for="pwd">START DATE</label>
                             <div class="col-sm-10"> 
-                                <input type="text" class="form-control" id="stock-start" placeholder="Enter password" value="<?php echo date("m/d/Y"); ?>">
+                                <input type="text" class="form-control" id="stock-start" value="<?php echo date("m/d/Y"); ?>">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="control-label col-sm-2" for="pwd">END DATE</label>
                             <div class="col-sm-10"> 
-                                <input type="text" class="form-control" id="stock-end" placeholder="Enter password" value="<?php echo date("m/d/Y"); ?>">
+                                <input type="text" class="form-control" id="stock-end" value="<?php echo date("m/d/Y"); ?>">
                             </div>
                         </div>
                         <div class="form-group"> 
@@ -110,6 +102,41 @@ $todaysDate = date("m/d/y");
     $("#stock-start").datepicker();
     $("#stock-end").datepicker();
 
+    function ChageStart() {
+        var option = "";
+        var start = $('#start').val();
+        var end = $("#end").val();
+        var sentReq = {
+            start: start,
+            end: end,
+            "action": "get_job"
+        };
+        var init = $("#job");
+        $.ajax({
+            type: 'POST',
+            url: "../_includes/reports/checkoutsumm/process/process_checkout_summary.php",
+            data: sentReq,
+            dataType: 'JSON',
+            beforeSend: function (xhr) {
+                init.val('');
+            },
+            success: function (response, textStatus, jqXHR) {
+                init.val('');
+                $.each(response, function (key, value) {
+                    option += "<option value='" + value.MART_WR_JOB + "'>" + value.MART_WR_JOB + "</option>";
+                });
+
+            },
+            complete: function () {
+                init.val('');
+                init.append(option);
+                init.selectpicker('refresh');
+            }
+        });
+
+    }
+
+//untuk check out per job
     function PrintData() {
         var job = $('#job').val();
         var start = $('#start').val();

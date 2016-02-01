@@ -5,11 +5,12 @@ $conn = oci_connect(ORA_CON_UN, ORA_CON_PW, ORA_CON_DB) or die;
 $start = $_GET['start'];
 $end = $_GET['end'];
 $job = $_GET['job'];
-$tanggalMulai = date("d F Y", strtotime($start));
-$tanggalSelesai = date("d F Y", strtotime($end));
-
 header("Content-type: application/octet-stream");
 $formattedFileName = date("m/d/Y_h:i", time());
+// simpan file excel dengan nama umr2013.xls
+//saat file berhasil di buat, otomatis pop up download akan muncul
+$tanggalMulai = date("d F Y", strtotime($start));
+$tanggalSelesai = date("d F Y", strtotime($end));
 header('Content-Disposition: attachment;filename="GeneralReportFor ' . "Report Consumable Periode $tanggalMulai~$tanggalSelesai ~~ $job" . '.xls"');
 header("Pragma: no-cache");
 header("Expires: 0");
@@ -43,17 +44,14 @@ $s = $selisih->format("%a")
                 }
                 ?>
                 <th style="border: 1px ridge black;" class='text-center'>TOTAL</th>
-                <th style="border: 1px ridge black;" class='text-center'>SATUAN</th>
             </tr>
         </thead>
         <tbody> 
             <?php
-            $sql = " SELECT DISTINCT MI.INV_ID, MI.INV_DESC, AA.UNIT_LVL2
-                        FROM MASTER_INV@WELTESMART_WENLOGINV_LINK MI
-                        INNER JOIN (SELECT DISTINCT INV_ID, UNIT_LVL2 FROM MART_UNIT_CONVERS) AA
-                        ON AA.INV_ID = MI.INV_ID
-                       WHERE MI.INV_WM_SELECT = '1'
-                    ORDER BY MI.INV_DESC ASC";
+            $sql = "SELECT DISTINCT INV_ID, INV_DESC "
+                    . "FROM MASTER_INV@WELTESMART_WENLOGINV_LINK "
+                    . "WHERE INV_WM_SELECT = '1' "
+                    . "ORDER BY INV_DESC ASC";
             $parse = oci_parse($conn, $sql);
             oci_execute($parse);
 
@@ -71,12 +69,7 @@ $s = $selisih->format("%a")
                     echo "<td style='border: 1px ridge black;'>$query</td>";
                     $total+=intval($query);
                 }
-                if ($total <> 0) {
-                    echo "<td style='border: 1px ridge black; color:red; text-align:right;'>$total</td>";
-                } else {
-                    echo "<td style='border: 1px ridge black; text-align:right;'>$total</td>";
-                }
-                echo "<td style='border: 1px ridge black; text-align:right;'>$row1[UNIT_LVL2]</td>";
+                echo "<td style='border: 1px ridge black;'>$total</td>";
                 echo "</tr>";
             }
             ?>

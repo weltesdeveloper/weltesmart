@@ -139,12 +139,14 @@ function SubmitBonGudang() {
     var inv_id = [];
     var qty = [];
     var remark = [];
+    var unit = [];
     var rows = $('#inv-checkout-table').dataTable().fnGetNodes();
     for (var x = 0; x < rows.length; x++) {
         if ($(rows[x]).find("td:eq(0)").find("select").val() != "") {
             inv_id.push($(rows[x]).find("td:eq(0)").find("select").val());
             qty.push($(rows[x]).find("td:eq(2)").find("input").val());
-            remark.push($(rows[x]).find("td:eq(3)").find("input").val());
+            unit.push($(rows[x]).find("td:eq(3)").find("select").val());
+            remark.push($(rows[x]).find("td:eq(4)").find("input").val());
         }
     }
 
@@ -160,22 +162,27 @@ function SubmitBonGudang() {
         qty: qty,
         remark: remark,
         rem: rem,
-        action: "submit_data"
+        action: "submit_data",
+        unit:unit
     };
 
     console.log(sentReq);
-    if (job == "") {
-        swal("ENTER JOB FIRST", "ERROR", "error");
+    if (job == "" || job == null) {
+//        swal("ENTER JOB FIRST", "ERROR", "error");
+        alert("PILIH JOB");
         $('#job').focus();
-    } else if (pembawa == "") {
-        swal("ENTER CARRIER", "ERROR", "error");
+    } else if (pembawa == "" || pembawa == null) {
+//        swal("ENTER CARRIER", "ERROR", "error");
+        alert("INPUT PEMBAWA BON GUDANG");
         $('#pembawa').focus();
-    } else if (spv == "") {
-        swal("ENTER SPV", "ERROR", "error");
+    } else if (spv == "" || spv == null) {
+//        swal("ENTER SPV", "ERROR", "error");
+        alert("INPUT SPV ");
         $('#spv').focus();
     } else if (inv_id.length == 0) {
-        swal("ENTER INVENTORY MINIMUN 1 ITEM", "ERROR", "error");
+//        swal("ENTER INVENTORY MINIMUN 1 ITEM", "ERROR", "error");
 //        $('#tanggal').focus();
+        alert("PILIH INVENTORY MINIMUN 1 ITEM");
     } else {
         var cf = confirm("DO YOU WANT SUBMIT?");
         if (cf == true) {
@@ -187,8 +194,8 @@ function SubmitBonGudang() {
                     if (response.indexOf("GAGAL") > 0) {
                         swal("GAGAL INSERT", response, "error");
                     } else {
-                        swal("SUCCESS INSERT", "GOOD JOB", "success");
-                        checkout('CHECKOUT');
+                        swal("SUCCESS INSERT", "Pengambilan Bon Gudang Sudah Masuk Ke Sistem", "success");
+                        new_menu('NEW_CHECKOUT')
                     }
                 }
             });
@@ -213,7 +220,8 @@ function ChangeInventory(param) {
             } else {
                 $('#qty' + param).removeAttr("max").attr("max", response[0].TRANS_QTY);
             }
-            $('#max' + param).text(response[0].TRANS_QTY);
+            $('#max' + param).text(response[0].TRANS_QTY + " " + response[0].UNIT_LVL2);
+            $('#inv-unit' + param).val(response[0].UNIT_LVL2).selectpicker('refresh');
         }
     });
 }

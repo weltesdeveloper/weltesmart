@@ -1,8 +1,8 @@
 <section class="content-header">
-    <h1>INVENTORY CHECKOUT <i class="text-danger">by barcode</i><small> &nbsp; Consumable Checkout Based On Job & Subjob</small></h1>
+    <h1>NEW INVENTORY CHECKOUT <i class="text-danger">by Select </i></h1>
     <ol class="breadcrumb">
-        <li class="active"><button class="btn btn-xs btn-primary" id="instant-checkout">INSTANT CHECKOUT</button></li>
-        <li class="active"><button class="btn btn-xs btn-warning" id="request-checkout">CHECKOUT BY CONSUMABLE REQUEST</button></li>
+        <!--<li class="active"><button class="btn btn-xs btn-primary" id="instant-checkout">INSTANT CHECKOUT</button></li>-->
+        <!--<li class="active"><button class="btn btn-xs btn-warning" id="request-checkout">CHECKOUT BY CONSUMABLE REQUEST</button></li>-->
     </ol>
 </section>
 <section class="content">
@@ -10,7 +10,7 @@
         <div class="col-md-12">
             <div class="box box-solid box-default">
                 <div class="box-header with-border">
-                    <h3 class="box-title"><b>INSTANT CHECKOUT</b> ~ Auto Generated Warehouse Receipt #</h3> : 
+                    <h3 class="box-title"><b>PILIH TANGGAL, JOB, SUBJOB, PEMBAWA, SPV</b></h3> : 
                     <b><span id="wh-receipt"></span></b>
                     <div class="box-tools pull-right">
                         <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
@@ -68,7 +68,7 @@
                                     <div class="input-group-addon">
                                         <i class="fa fa-user-plus"></i>
                                     </div>
-                                    <input type="text" class="form-control pull-right" id="remark" placeholder="Remark jika diperlukan">
+                                    <input type="text" class="form-control pull-right" id="remark" placeholder="Boleh Diisi boleh juga kosong">
                                 </div><!-- /.input group -->
                             </div><!-- /.form group -->
                         </div>
@@ -79,7 +79,7 @@
                                     <div class="input-group-addon">
                                         <i class="fa fa-user-plus"></i>
                                     </div>
-                                    <input type="text" class="form-control pull-right" id="manager" value="EDIYANTO">
+                                    <input type="text" class="form-control pull-right" id="manager" value="EDIYANTO" readonly="">
                                 </div><!-- /.input group -->
                             </div><!-- /.form group -->
                         </div>

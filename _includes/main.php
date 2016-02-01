@@ -1,8 +1,6 @@
 <?php
-session_start();
-$username = $_SESSION['userlogin'];
-$user_role = $_SESSION['rolelogin'];
-
+require_once '../_config/dbinfo.inc.php';
+require_once '../_config/misc.func.php';
 ?>
 
 <!DOCTYPE html>

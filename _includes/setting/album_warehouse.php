@@ -24,7 +24,7 @@ $var1 = SingleQryFld($var1sql, $conn);
                 <select class="selectpicker form-control" data-live-search='true' id='inv_type'>
                     <option value='%' selected>ALL</option>
                     <?php
-                    $invCatParse = oci_parse($conn, "SELECT DISTINCT MSI.INV_TYPE FROM MART_STOCK_INFO MSI ORDER BY MSI.INV_TYPE ASC");
+                    $invCatParse = oci_parse($conn, "SELECT DISTINCT MSI.INV_TYPE FROM MART_INV_INFO MSI ORDER BY MSI.INV_TYPE ASC");
                     $invExcErr = oci_execute($invCatParse);
                     if (!$invExcErr) {
                         $e = oci_error($invCatParse);

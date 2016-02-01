@@ -4,17 +4,13 @@ require_once('../../../_config/misc.func.php');
 $conn = oci_connect(ORA_CON_UN, ORA_CON_PW, ORA_CON_DB) or die;
 $start = $_GET['start'];
 $end = $_GET['end'];
-header("Content-type: application/octet-stream");
 $formattedFileName = date("m/d/Y_h:i", time());
-// simpan file excel dengan nama umr2013.xls
-//saat file berhasil di buat, otomatis pop up download akan muncul
 $tanggalMulai = date("d F Y", strtotime($start));
 $tanggalSelesai = date("d F Y", strtotime($end));
+
+header("Content-type: application/octet-stream");
 header('Content-Disposition: attachment;filename="GeneralReportFor ' . "Laporan Stock Awal dan Stock Akhir $tanggalMulai~$tanggalSelesai" . '.xls"');
 header("Pragma: no-cache");
-header("Expires: 0");
-$selisih = date_diff(date_create($end), date_create($start));
-$s = $selisih->format("%a")
 ?>
 <div class="col-sm-12">
     <table class="table table-striped table-bordered" style="border: 1px ridge black;">
@@ -33,52 +29,49 @@ $s = $selisih->format("%a")
         </thead>
         <tbody> 
             <?php
-            $sql = "SELECT MSI.INV_ID,
-         MSI.INV_DESC,
-         MSI.INV_STK_QTY AS STOCK_AKHIR,
-         X.MASUK,
-         X.KELUAR,
-         X.SELISIH,
-         MSI.INV_STK_QTY - X.SELISIH AS STOCK_AWAL
-    FROM MART_STOCK_INFO MSI
-         INNER JOIN
-         (WITH MASUK
-               AS (  SELECT MART_CHECKIN_INV_ID,
-                            SUM (MART_CHECKIN_INV_QTY) MART_CHECKIN_INV_QTY--,
-                            --MART_CHECKIN_DATE,
-                            --MART_CHECKIN_SYSDATE
-                       FROM MART_DTL_CHKIN MDC
-                            INNER JOIN MART_MST_CHECKIN MMC
-                               ON MMC.MART_CHECKIN_ID = MDC.MART_CHECKIN_ID
-                      WHERE MART_CHECKIN_DATE BETWEEN TO_DATE ('$start',
-                                                               'MM/DD/YYYY')
-                                                  AND TO_DATE ('$end',
-                                                               'MM/DD/YYYY')
-                   GROUP BY MART_CHECKIN_INV_ID--,
-                            --MART_CHECKIN_DATE,
-                            --MART_CHECKIN_SYSDATE
-                            ),
-               KLR
-               AS (  SELECT NVL (SUM (MART_WR_INV_QTY), 0) KELUAR,
-                            MART_WR_INV_ID,
-                            INV_DESC
-                       FROM MART_CHECKOUT_INFO
-                      WHERE MART_WR_DATE BETWEEN TO_DATE ('$start',
-                                                          'MM/DD/YYYY')
-                                             AND TO_DATE ('$end',
-                                                          'MM/DD/YYYY')
-                   GROUP BY MART_WR_INV_ID, INV_DESC
-                   ORDER BY MART_WR_INV_ID)
-          SELECT KLR.MART_WR_INV_ID,
-                 KLR.INV_DESC,
-                 NVL (MASUK.MART_CHECKIN_INV_QTY, 0) MASUK,
-                 KLR.KELUAR,
-                 NVL (MASUK.MART_CHECKIN_INV_QTY, 0) - KLR.KELUAR AS SELISIH
-            FROM KLR
-                 FULL OUTER JOIN MASUK
-                    ON MASUK.MART_CHECKIN_INV_ID = KLR.MART_WR_INV_ID) X
-            ON MSI.INV_ID = X.MART_WR_INV_ID
-ORDER BY MSI.INV_DESC ASC";
+            $sql = "WITH INV
+                        AS (SELECT MII.INV_ID, MII.INV_DESC
+                              FROM MART_INV_INFO MII),
+                        S_NOW
+                        AS (  SELECT INV_ID, INV_DESC, SUM (TRANS_QTY) AS STOCK_SEKARANG
+                                FROM VW_STOCK_HIST VSI
+                               WHERE TRANS_DATE <= TO_DATE ('$end', 'MM/DD/YYYY')
+                            GROUP BY INV_ID, INV_DESC
+                            ORDER BY INV_DESC),
+                        S_OUT
+                        AS (  SELECT MART_WR_INV_ID INV_ID,
+                                     INV_DESC,
+                                     SUM (MART_WR_INV_QTY) AS STOCK_OUT
+                                FROM MART_CHECKOUT_INFO
+                               WHERE MART_WR_DATE BETWEEN TO_DATE ('$start', 'MM/DD/YYYY')
+                                                      AND TO_DATE ('$end', 'MM/DD/YYYY')
+                            GROUP BY MART_WR_INV_ID, INV_DESC
+                            ORDER BY INV_DESC),
+                        S_IN
+                        AS (  SELECT MART_CHECKIN_INV_ID INV_ID,
+                                     INV_DESC,
+                                     SUM (MART_CHECKIN_INV_QTY) AS STOCK_IN
+                                FROM MART_CHECKIN_INFO
+                               WHERE MART_CHECKIN_DATE BETWEEN TO_DATE ('$start',
+                                                                        'MM/DD/YYYY')
+                                                           AND TO_DATE ('$end',
+                                                                        'MM/DD/YYYY')
+                            GROUP BY MART_CHECKIN_INV_ID, INV_DESC
+                            ORDER BY INV_DESC)
+                   SELECT INV.INV_ID,
+                          INV.INV_DESC,
+                          NVL (S_NOW.STOCK_SEKARANG, 0) STOCK_SEKARANG,
+                          NVL (S_IN.STOCK_IN, 0) STOCK_IN,
+                          -1 * NVL (S_OUT.STOCK_OUT, 0) AS STOCK_OUT,
+                            NVL (S_NOW.STOCK_SEKARANG, 0)
+                          - NVL (S_IN.STOCK_IN, 0)
+                          + NVL (S_OUT.STOCK_OUT, 0)
+                             AS STOCK_AWAL
+                     FROM INV
+                          LEFT OUTER JOIN S_NOW ON S_NOW.INV_ID = INV.INV_ID
+                          LEFT OUTER JOIN S_IN ON S_IN.INV_ID = INV.INV_ID
+                          LEFT OUTER JOIN S_OUT ON S_OUT.INV_ID = INV.INV_ID
+                          ORDER BY INV.INV_DESC ASC";
 //            echo "$sql";
             $parse = oci_parse($conn, $sql);
             oci_execute($parse);
@@ -96,13 +89,13 @@ ORDER BY MSI.INV_DESC ASC";
                             <?php echo "$row[STOCK_AWAL]";?>
                         </td>
                         <td style="border: 1px ridge black; text-align: center;">
-                            <?php echo "$row[MASUK]";?>
+                            <?php echo "$row[STOCK_IN]";?>
                         </td>
                         <td style="border: 1px ridge black; text-align: center;">
-                            <?php echo "-$row[KELUAR]";?>
+                            <?php echo "$row[STOCK_OUT]";?>
                         </td>
                         <td style="border: 1px ridge black; text-align: center;">
-                            <?php echo "$row[STOCK_AKHIR]";?>
+                            <?php echo "$row[STOCK_SEKARANG]";?>
                         </td>
                     </tr>
                 <?php

@@ -19,7 +19,7 @@ switch ($_POST['action']) {
         while ($row2 = oci_fetch_array($spvParse)) {
             array_push($spv, $row2);
         }
-        
+
         $pembawa = array();
         $pembawaSql = "SELECT DISTINCT UPPER(MART_WR_CARRIER) MART_WR_CARRIER FROM MART_MST_CHKOUT ORDER BY UPPER(MART_WR_CARRIER) ASC";
         $pembawaParse = oci_parse($conn, $pembawaSql);
@@ -28,9 +28,9 @@ switch ($_POST['action']) {
             array_push($pembawa, $row3);
         }
         $response = array(
-            "job"=>$job,
-            "spv"=>$spv,
-            "pembawa"=>$pembawa
+            "job" => $job,
+            "spv" => $spv,
+            "pembawa" => $pembawa
         );
         echo json_encode($response);
         break;
@@ -60,11 +60,14 @@ switch ($_POST['action']) {
         break;
     case "get_inventory":
         $response = array();
-        $sql = "SELECT INV_ID, SUM (TRANS_QTY) TRANS_QTY, INV_DESC
-    FROM VW_STOCK_HIST
-   WHERE INV_DESC LIKE 'Inventory Testing Gudang%'
-GROUP BY INV_ID, INV_DESC
-ORDER BY INV_DESC ASC";
+        $sql = "SELECT INV_ID, "
+                . "SUM (TRANS_QTY) TRANS_QTY, "
+                . "INV_DESC "
+                . "FROM VW_STOCK_HIST "
+                . "GROUP BY INV_ID, "
+                . "INV_DESC "
+                . "HAVING SUM (TRANS_QTY) > 0 "
+                . "ORDER BY INV_DESC ASC";
         $parse = oci_parse($conn, $sql);
         oci_execute($parse);
         while ($row = oci_fetch_array($parse)) {
@@ -84,6 +87,7 @@ ORDER BY INV_DESC ASC";
         $manager = $_POST['manager'];
         $inv_id = $_POST['inv_id'];
         $qty = $_POST['qty'];
+        $unit = $_POST['unit'];
         $remark = $_POST['remark'];
         $rem = $_POST['rem'];
         $sql = "INSERT INTO MART_MST_CHKOUT (MART_WR_ID, MART_WR_DATE, MART_WR_SYSDATE, MART_WR_SIGN, 
@@ -96,8 +100,8 @@ ORDER BY INV_DESC ASC";
             oci_commit($conn);
             echo "SUKSES";
             for ($i = 0; $i < count($inv_id); $i++) {
-                $DtlInsertSql = "INSERT INTO MART_DTL_CHKOUT(MART_WR_ID, MART_WR_INV_ID, MART_WR_INV_QTY, MART_WR_INV_REMARK) "
-                        . "VALUES('$id', '$inv_id[$i]', '$qty[$i]', '$remark[$i]')";
+                $DtlInsertSql = "INSERT INTO MART_DTL_CHKOUT(MART_WR_ID, MART_WR_INV_ID, MART_WR_INV_QTY, MART_WR_INV_REMARK, MART_WR_INV_UNIT) "
+                        . "VALUES('$id', '$inv_id[$i]', '$qty[$i]', '$remark[$i]', '$unit[$i]')";
                 $DtlInsertParse = oci_parse($conn, $DtlInsertSql);
                 $DtlInsert = oci_execute($DtlInsertParse);
                 if ($DtlInsert) {
@@ -108,39 +112,7 @@ ORDER BY INV_DESC ASC";
                     echo "GAGAL";
                 }
             }
-
-            for ($i = 0; $i < count($inv_id); $i++) {
-                $inv_id_ = $inv_id[$i];
-                $qty_ = $qty[$i] * -1;
-                $sign_ = $username;
-                $type_ = "OUT";
-                $adjustSql = "INSERT INTO MART_STK_ADJ_HIST(INV_ID, HIST_ADJUST, INPUT_SIGN, INPUT_DATE, HIST_TYPE, PROPERTIES) "
-                        . "VALUES('$inv_id_', '$qty_', '$sign_', SYSDATE, '$type_', '$id')";
-                $adjustParse = oci_parse($conn, $adjustSql);
-                $adjust = oci_execute($adjustParse);
-                if ($adjust) {
-                    oci_commit($conn);
-                    echo "SUKSES";
-                } else {
-                    oci_rollback($conn);
-                    echo "GAGAL";
-                }
-            }
-
-            for ($i = 0; $i < count($inv_id); $i++) {
-                $query = "SELECT SUM(HIST_ADJUST) FROM MART_STK_ADJ_HIST WHERE INV_ID = '$inv_id[$i]'";
-                $total = SingleQryFld("$query", $conn);
-                $updateStockSql = "UPDATE MART_STK_ADJ SET INV_STK_QTY = '$total' WHERE INV_ID = '$inv_id[$i]'";
-                $updateStockParse = oci_parse($conn, $updateStockSql);
-                $exe = oci_execute($updateStockParse);
-                if ($exe) {
-                    oci_commit($conn);
-                    echo "SUKSES";
-                } else {
-                    oci_rollback($conn);
-                    echo "GAGAL";
-                }
-            }
+        
         } else {
             oci_rollback($conn);
             echo "GAGAL";
@@ -149,7 +121,15 @@ ORDER BY INV_DESC ASC";
 
     case "check_max":
         $inv_id = $_POST['inv_id'];
-        $sql = "SELECT SUM(TRANS_QTY)TRANS_QTY FROM VW_STOCK_HIST WHERE INV_ID = '$inv_id'";
+        $sql = "WITH AA
+                AS (SELECT DISTINCT INV_ID, UNIT_LVL2
+                      FROM MART_UNIT_CONVERS
+                     WHERE INV_ID = '$inv_id'),
+                BB
+                AS (SELECT SUM (TRANS_QTY) TRANS_QTY
+                      FROM VW_STOCK_HIST
+                     WHERE INV_ID = '$inv_id')
+          SELECT AA.INV_ID, AA.UNIT_LVL2, BB.TRANS_QTY FROM AA, BB";
         $parse = oci_parse($conn, $sql);
         oci_execute($parse);
         $response = array();
