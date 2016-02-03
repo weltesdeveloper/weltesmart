@@ -113,6 +113,7 @@ require_once('../../_config/dbinfo.inc.php');
                                     <th class="text-center" style="" >INVENTORY NAME</th>
                                     <th class="text-center" style="width: 100px;">STOCK ON HAND</th>
                                     <th class="text-center" style="width: 75px">QTY</th>
+                                    <th class="text-center" style="width: 75px">UNIT</th>
                                     <th class="text-center" style="width: 20px;">ACT</th>
                                 </tr>
                             </thead>

@@ -51,7 +51,7 @@ switch ($_POST['action']) {
         }
         $str_alrdy = substr($str_alrdy, 0, (strlen($str_alrdy) - 1));
 
-        $sql = "SELECT * FROM MART_STOCK_INFO WHERE INV_ID = '$inv_id' AND INV_ID NOT IN ($str_alrdy)";
+        $sql = "SELECT * FROM MART_INV_INFO WHERE INV_ID = '$inv_id' AND INV_ID NOT IN ($str_alrdy)";
         $parse = oci_parse($conn, $sql);
         oci_execute($parse);
 
@@ -82,9 +82,10 @@ switch ($_POST['action']) {
         $pembawa = str_replace("'", "''", $_POST['pembawa']);
         $spv = $_POST['spv'];
         $manager = $_POST['manager'];
+        $rem = $_POST['rem'];
         $inv_id = $_POST['inv_id'];
         $qty = $_POST['qty'];
-        $rem = $_POST['rem'];
+        $unit = $_POST['unit'];
 
         $sql = "INSERT INTO MART_MST_CHKOUT (MART_WR_ID, MART_WR_DATE, MART_WR_SYSDATE, MART_WR_SIGN, 
             MART_WR_REMARK, MART_WR_JOB, MART_WR_SUBJOB, MART_WR_CARRIER, MART_WR_SPV_SIGN, MART_WR_FM_SIGN ) 
@@ -97,46 +98,11 @@ switch ($_POST['action']) {
             echo "SUKSES";
 
             for ($i = 0; $i < count($inv_id); $i++) {
-                $DtlInsertSql = "INSERT INTO MART_DTL_CHKOUT(MART_WR_ID, MART_WR_INV_ID, MART_WR_INV_QTY) "
-                        . "VALUES('$id', '$inv_id[$i]', '$qty[$i]')";
+                $DtlInsertSql = "INSERT INTO MART_DTL_CHKOUT(MART_WR_ID, MART_WR_INV_ID, MART_WR_INV_QTY, MART_WR_INV_UNIT) "
+                        . "VALUES('$id', '$inv_id[$i]', '$qty[$i]', '$unit[$i]' )";
                 $DtlInsertParse = oci_parse($conn, $DtlInsertSql);
                 $DtlInsert = oci_execute($DtlInsertParse);
                 if ($DtlInsert) {
-                    oci_commit($conn);
-                    echo "SUKSES";
-                } else {
-                    oci_rollback($conn);
-                    gagal__($id, $conn);
-                    echo "GAGAL";
-                }
-            }
-
-            for ($i = 0; $i < count($inv_id); $i++) {
-                $inv_id_ = $inv_id[$i];
-                $qty_ = $qty[$i] * -1;
-                $sign_ = $username;
-                $type_ = "OUT";
-                $adjustSql = "INSERT INTO MART_STK_ADJ_HIST(INV_ID, HIST_ADJUST, INPUT_SIGN, INPUT_DATE, HIST_TYPE, PROPERTIES) "
-                        . "VALUES('$inv_id_', '$qty_', '$sign_', SYSDATE, '$type_', '$id')";
-                $adjustParse = oci_parse($conn, $adjustSql);
-                $adjust = oci_execute($adjustParse);
-                if ($adjust) {
-                    oci_commit($conn);
-                    echo "SUKSES";
-                } else {
-                    oci_rollback($conn);
-                    gagal__($id, $conn);
-                    echo "GAGAL";
-                }
-            }
-
-            for ($i = 0; $i < count($inv_id); $i++) {
-                $query = "SELECT SUM(HIST_ADJUST) FROM MART_STK_ADJ_HIST WHERE INV_ID = '$inv_id[$i]'";
-                $total = SingleQryFld("$query", $conn);
-                $updateStockSql = "UPDATE MART_STK_ADJ SET INV_STK_QTY = '$total' WHERE INV_ID = '$inv_id[$i]'";
-                $updateStockParse = oci_parse($conn, $updateStockSql);
-                $exe = oci_execute($updateStockParse);
-                if ($exe) {
                     oci_commit($conn);
                     echo "SUKSES";
                 } else {
@@ -154,7 +120,8 @@ switch ($_POST['action']) {
     case 'show_modal_inv_dtl':
         $inv_id = $_POST['inv_id'];
         $stk_qty = $_POST['stk_qty'];
-        $inv_desc = SingleQryFld("SELECT INV_DESC FROM MART_STOCK_INFO WHERE INV_ID = '$inv_id' ", $conn);
+        $stk_unit = $_POST['stk_unit'];
+        $inv_desc = SingleQryFld("SELECT INV_DESC FROM MART_INV_INFO WHERE INV_ID = '$inv_id' ", $conn);
         $counter = $_POST['counter'];
         ?>
         <div class="modal-header">
@@ -180,7 +147,13 @@ switch ($_POST['action']) {
                         <label>QTY DIAMBIL</label>
                     </div>
                     <div class="col-sm-8">
-                        <input class="form-control" type="text" value="1" id="modal_txt_qty" />
+                        <div class="input-group">
+                            <input class="form-control" type="text" value="1" id="modal_txt_qty" />
+                            <span class="input-group-addon">
+                                <label><?= $stk_unit ?></label>
+                            </span>
+                        </div>
+                        <small>tekan tombol SPACE untuk Submit.</small>
                     </div>
                 </div>
             </div>

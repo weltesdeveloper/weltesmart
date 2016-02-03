@@ -50,17 +50,6 @@
                                 </div><!-- /.input group -->
                             </div>
                         </div>
-                        <!--                        <div class="col-md-6 col-xs-6 col-lg-6">
-                                                    <div class="form-group">
-                                                        <label class="control-label">SUB JOB</label>
-                                                        <div class="input-group">
-                                                            <div class="input-group-addon">
-                                                                <i class="fa fa-calendar"></i>
-                                                            </div>
-                                                            <select class="selectpicker" data-width="100%" id="subjob" data-live-search="true"></select>
-                                                        </div> /.input group 
-                                                    </div>
-                                                </div>-->
                     </div>
                     <div class="row">
                         <div class="col-md-6 col-xs-6 col-lg-6">

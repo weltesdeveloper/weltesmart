@@ -7,10 +7,7 @@ switch ($_POST['action']) {
     case "load_data":
         $response = array();
         $invtype = $_POST['inv_type'];
-        $sql = "SELECT VSH.INV_ID, VSH.INV_DESC, SUM (VSH.TRANS_QTY) AS QTY
-                        FROM VW_STOCK_HIST  VSH INNER JOIN MART_INV_INFO MII ON MII.INV_ID = VSH.INV_ID
-                    GROUP BY VSH.INV_ID, VSH.INV_DESC
-                    ORDER BY VSH.INV_DESC";
+        $sql = "SELECT INV_ID, INV_DESC, INV_STK_QTY AS QTY FROM MART_INV_INFO ORDER BY INV_DESC";
         $parse = oci_parse($conn, $sql);
         oci_execute($parse);
         while ($row = oci_fetch_array($parse)) {
@@ -22,11 +19,7 @@ switch ($_POST['action']) {
     case "get_inv_stock":
         $response = array();
         $inv_id = $_POST['inv_id'];
-        $sql = "SELECT VSH.INV_ID, VSH.INV_DESC, SUM (VSH.TRANS_QTY) AS QTY
-    FROM VW_STOCK_HIST  VSH INNER JOIN MART_INV_INFO MII ON MII.INV_ID = VSH.INV_ID
-    WHERE VSH.INV_ID = '$inv_id'
-GROUP BY VSH.INV_ID, VSH.INV_DESC
-ORDER BY VSH.INV_DESC";
+        $sql = "SELECT INV_ID, INV_DESC, INV_STK_QTY AS QTY FROM MART_INV_INFO WHERE INV_ID = '$inv_id' ORDER BY INV_DESC";
         $parse = oci_parse($conn, $sql);
         oci_execute($parse);
         $response = array();
@@ -42,7 +35,7 @@ ORDER BY VSH.INV_DESC";
         $qty = $_POST['qty'];
         $unit = $_POST['unit'];
         $remark = $_POST['remark'];
-        $stock_sekarang = SingleQryFld("SELECT SUM(TRANS_QTY) AS QTY FROM VW_STOCK_HIST WHERE INV_ID = '$inv_id'", $conn);
+        $stock_sekarang = SingleQryFld("SELECT NVL(SUM(TRANS_QTY),0) AS QTY FROM VW_STOCK_HIST WHERE INV_ID = '$inv_id'", $conn);
         $selisih_stock = $qty - $stock_sekarang;
 
         $sql = "INSERT INTO MART_STOCK_ADJUST(ADJUST_ID, INV_ID, ADJUST_DATE, ADJUST_SYSDATE, ADJUST_SIGN, ADJUST_REMARK, ADJUST_QTY, ADJUST_UNIT) "
@@ -59,7 +52,6 @@ ORDER BY VSH.INV_DESC";
         } else {
             oci_rollback($conn);
             $response = array(
-//                "qty" => $qty//,
                 "status" => "GAGAL INPUT" . oci_error()
             );
             echo json_encode($response);

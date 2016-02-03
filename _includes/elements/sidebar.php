@@ -43,14 +43,26 @@
                 <i class="fa fa-print"></i> <span> Reports</span> <i class="fa fa-angle-left pull-right"></i>
             </a>
             <ul class="treeview-menu">
-                <li><a onclick="new_menu('HIST_CHECKOUT')" style="cursor: pointer;">
-                        <i class="fa fa-sign-out"></i> History Check Out</a>
+                <li>
+                    <a onclick="new_menu('HIST_CHECKOUT')" style="cursor: pointer;">
+                        <i class="fa fa-sign-out"></i> History Check Out
+                    </a>
                 </li>
-                <li><a onclick="new_menu('HIST_CHECKIN')" style="cursor: pointer;">
-                        <i class="fa fa-sign-out"></i> History Check In</a>
+                <li>
+                    <a onclick="new_menu('HIST_CHECKIN')" style="cursor: pointer;">
+                        <i class="fa fa-sign-out"></i> History Check In
+                    </a>
                 </li>
-                <!--<li><a onclick="report('STOCK_ON_HAND')" style="cursor: pointer;"><i class="fa fa-truck"></i> Stock On Hand</a></li>-->
-                <li><a onclick="report('CHECKOUT_SUMM')" style="cursor: pointer;"><i class="fa fa-sign-out"></i> Checkout Summary</a></li>
+                <li>
+                    <a onclick="report('CHECKOUT_SUMM')" style="cursor: pointer;">
+                        <i class="fa fa-sign-out"></i> Checkout Summary
+                    </a>
+                </li>
+                <li>
+                    <a onclick="report('KONVERSI_UNIT')" style="cursor: pointer;">
+                        <i class="fa fa-sign-out"></i> List Konversi Inventory
+                    </a>
+                </li>
             </ul>
         </li>
         <!--TESTING ITEM-->
@@ -158,48 +170,6 @@
         }
     }
 
-    function pr(param) {
-        switch (param) {
-            case "LIST_PR":
-                $.ajax({
-                    url: "../_includes/purchaserequisition/list.php",
-                    data: {},
-                    beforeSend: function (xhr) {
-                        $('#maincontent').html();
-                    },
-                    success: function (response, textStatus, jqXHR) {
-                        $('#maincontent').html(response);
-                    }
-                });
-                break; // END OF CASE
-
-            case "CREATE_PR":
-                $.ajax({
-                    url: "../_includes/purchaserequisition/create.php",
-                    data: {},
-                    beforeSend: function (xhr) {
-                        $('#maincontent').html();
-                    },
-                    success: function (response, textStatus, jqXHR) {
-                        $('#maincontent').html(response);
-                    }
-                });
-                break; // END OF CASE
-
-            case "REV_PR":
-                $.ajax({
-                    url: "../_includes/purchaserequisition/revise.php",
-                    data: {},
-                    beforeSend: function (xhr) {
-                        $('#maincontent').html();
-                    },
-                    success: function (response, textStatus, jqXHR) {
-                        $('#maincontent').html(response);
-                    }
-                });
-                break; // END OF CASE
-        }
-    }
 
     function report(param) {
         switch (param) {
@@ -248,7 +218,7 @@
 
             case "MASTER_INV":
                 $.ajax({
-                    url: "../_includes/setting/master_inv_type.php",
+                    url: "../_includes/new_menu/setting_inv/view_setting_inv.php",
                     data: {},
                     beforeSend: function (xhr) {
                         $('#maincontent').html();

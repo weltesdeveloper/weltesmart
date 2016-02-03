@@ -32,6 +32,11 @@ function LoadData() {
                             {
                                 "orderable": true,
                                 "visible": true,
+                                "targets": [0]
+                            },
+                            {
+//                                "orderable": true,
+                                "visible": true,
                                 "targets": [2],
                                 "className": 'text-center',
                                 "render": function (data, type, row, meta) {
@@ -40,7 +45,7 @@ function LoadData() {
                                 }
                             },
                             {
-                                "orderable": true,
+//                                "orderable": true,
                                 "visible": true,
                                 "targets": [3],
                                 "className": 'text-center',
@@ -50,7 +55,7 @@ function LoadData() {
                                 }
                             },
                             {
-                                "orderable": true,
+//                                "orderable": true,
                                 "visible": true,
                                 "targets": [4],
                                 "className": 'text-center',
