@@ -140,7 +140,7 @@ function ShowHistory() {
                     api.column(2, {page: 'current'}).data().each(function (group, i) {
                         if (last !== group) {
                             $(rows).eq(i).before(
-                                    '<tr class="group"><td colspan="5">' + group + '</td></tr>'
+                                    '<tr class="group"><td colspan="6" style="background-color:silver; color:green; font-size:16px;">' + group + '</td></tr>'
                                     );
 
                             last = group;

@@ -17,7 +17,7 @@
                 <i class="fa fa-briefcase"></i> <span> Inventory Adjustment</span> <i class="fa fa-angle-left pull-right"></i>
             </a>
             <ul class="treeview-menu">
-                <li><a onclick="new_menu('NEW_ADJUST')" style="cursor: pointer;"><i class="fa fa-terminal"></i> Inventory Adjustment</a></li>
+                <li><a onclick="new_menu('NEW_ADJUST')" style="cursor: pointer;"><i class="fa fa-sitemap"></i> <span>Inventory Adjustment</span></a></li>
             </ul>
         </li>
         <li class="">
@@ -44,13 +44,28 @@
             </a>
             <ul class="treeview-menu">
                 <li>
+                    <a onclick="new_menu('STOCK_UPDATE')" style="cursor: pointer;">
+                        <i class="fa fa-book"></i> Stock On Hand
+                    </a>
+                </li>
+                <li>
+                    <a onclick="new_menu('HIST_ADJUST')" style="cursor: pointer;">
+                        <i class="fa fa-home"></i> History Adjustment
+                    </a>
+                </li>
+                <li>
                     <a onclick="new_menu('HIST_CHECKOUT')" style="cursor: pointer;">
                         <i class="fa fa-sign-out"></i> History Check Out
                     </a>
                 </li>
                 <li>
                     <a onclick="new_menu('HIST_CHECKIN')" style="cursor: pointer;">
-                        <i class="fa fa-sign-out"></i> History Check In
+                        <i class="fa fa-sign-in"></i> History Check In
+                    </a>
+                </li>
+                <li>
+                    <a onclick="new_menu('KONVERSI_UNIT')" style="cursor: pointer;">
+                        <i class="fa fa-hourglass"></i> List Konversi Inventory
                     </a>
                 </li>
                 <li>
@@ -58,15 +73,14 @@
                         <i class="fa fa-sign-out"></i> Checkout Summary
                     </a>
                 </li>
-                <li>
-                    <a onclick="report('KONVERSI_UNIT')" style="cursor: pointer;">
-                        <i class="fa fa-sign-out"></i> List Konversi Inventory
-                    </a>
-                </li>
             </ul>
         </li>
         <!--TESTING ITEM-->
-        <li class="">
+        <li <?php
+        if ($_SESSION['userlogin'] <> 'miko') {
+            echo 'class="hide"';
+        }
+        ?>>
             <a href="#">
                 <i class="fa fa-print"></i> <span> TestingData</span> <i class="fa fa-angle-left pull-right"></i>
             </a>
@@ -327,6 +341,30 @@
             case "HIST_CHECKIN":
                 $.ajax({
                     url: "../_includes/new_menu/history_checkin/view_hist_checkin.php",
+                    data: {},
+                    beforeSend: function (xhr) {
+                        $('#maincontent').html();
+                    },
+                    success: function (response, textStatus, jqXHR) {
+                        $('#maincontent').html(response);
+                    }
+                });
+                break;
+            case "KONVERSI_UNIT":
+                $.ajax({
+                    url: "../_includes/new_menu/konversi/view_konversi.php",
+                    data: {},
+                    beforeSend: function (xhr) {
+                        $('#maincontent').html();
+                    },
+                    success: function (response, textStatus, jqXHR) {
+                        $('#maincontent').html(response);
+                    }
+                });
+                break;
+            case "STOCK_UPDATE":
+                $.ajax({
+                    url: "../_includes/new_menu/stok/view_stock.php",
                     data: {},
                     beforeSend: function (xhr) {
                         $('#maincontent').html();

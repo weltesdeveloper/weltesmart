@@ -3,46 +3,41 @@ $(document).ready(function () {
     $('#start-date, #end-date').datepicker();
     /*PROSES JAVASCRIPT DAN JQUERY*/
     dt();
-    ShowHistory();
+    ShowInv();
     $.ajax({
         type: 'POST',
-        url: "../_includes/new_menu/history_checkin/model_hist_checkin.php",
+        url: "../_includes/new_menu/konversi/model_konversi.php",
         data: {"action": "loading_first"},
         dataType: 'JSON',
         beforeSend: function (xhr) {
-            $('#job').selectpicker().html('');
+            $('#inventory').selectpicker().html('');
         },
         success: function (response, textStatus, jqXHR) {
-            var job = "<option value='%' selected=''>ALL JOB</value>";
+            var inventory = "<option value='%' selected=''>ALL INVENTORY</value>";
 
-            $.each(response.job, function (key, value) {
-                job += "<option value=" + value.PROJECT_NO + ">" + value.PROJECT_NO + "</option>";
+            $.each(response.inv1, function (key, value) {
+                inventory += "<option value=" + value.INV_ID + ">" + value.INV_DESC + "</option>";
             });
-            $('#job').selectpicker().append(job);
+            $('#inventory').selectpicker().append(inventory);
         },
         complete: function (jqXHR, textStatus) {
-            $('#job').selectpicker().selectpicker('refresh');
+            $('#inventory').selectpicker().selectpicker('refresh');
         }
     });
 });
 
-function ShowHistory() {
-    var start = $('#start-date').val();
-    var end = $('#end-date').val();
-    var job = $('#job').val();
-
+function ShowInv() {
+    var inv_id = $('#inventory').val();
     var sentReq = {
-        "action": "show_history",
-        start: start,
-        end: end,
-        job: job
+        "action": "show_inventory",
+        inv_id: inv_id
     };
 
     console.log(sentReq);
 
     $.ajax({
         type: 'POST',
-        url: "../_includes/new_menu/history_checkin/model_hist_checkin.php",
+        url: "../_includes/new_menu/konversi/model_konversi.php",
         dataType: 'JSON',
         data: sentReq,
         success: function (response, textStatus, jqXHR) {
@@ -54,31 +49,40 @@ function ShowHistory() {
                 pageLength: 25,
                 "columns":
                         [
-                            {"data": null, "className": "text-center"},
-                            {"data": "PROJECT_NO", "className": "text-center"},
-                            {"data": "MART_CHECKIN_DATE", "className": "text-center"},
+                            {"data": "INV_ID", "className": "text-center"},
                             {"data": "INV_DESC", "className": "text-center"},
-                            {"data": null, "className": "text-center"}
+                            {"data": "UNIT_LVL1", "className": "text-center"},
+                            {"data": "UNIT_AMOUNT", "className": "text-center"},
+                            {"data": "", "className": "text-center"}
                         ],
                 "columnDefs":
                         [
-                            {"visible": false, "targets": 1},
+                            {"visible": false, "targets": 0},
                             {
-                                "orderable": true,
                                 "visible": true,
-                                "targets": [0],
+                                "targets": [2],
+                                "className": 'text-center',
                                 "render": function (data, type, row, meta) {
-                                    return nomer++;
+//                                    var isi = "<a style='cursor:pointer;' id='adjust" + row.INV_ID + "' onclick=Adjust('" + row.INV_ID + "')>" + row.QTY + "</a>";
+                                    return "1 " + row.UNIT_LVL1;
                                 }
                             },
                             {
-                                "orderable": true,
+                                "visible": true,
+                                "targets": [3],
+                                "className": 'text-center',
+                                "render": function (data, type, row, meta) {
+//                                    var isi = "<a style='cursor:pointer;' id='adjust" + row.INV_ID + "' onclick=Adjust('" + row.INV_ID + "')>" + row.QTY + "</a>";
+                                    return "<i class='fa fa-arrow-right'></i>";
+                                }
+                            },
+                            {
                                 "visible": true,
                                 "targets": [4],
+                                "className": 'text-center',
                                 "render": function (data, type, row, meta) {
-                                    var stock_asli = row.UNIT_ASLI;
-                                    var stock_konversi = "<sub>(" + row.UNIT_TERKECIL + ")</sub>";
-                                    return stock_asli + " " + stock_konversi;
+//                                    var isi = "<a style='cursor:pointer;' id='adjust" + row.INV_ID + "' onclick=Adjust('" + row.INV_ID + "')>" + row.QTY + "</a>";
+                                    return row.UNIT_AMOUNT + " " + row.UNIT_LVL2;
                                 }
                             }
                         ],
@@ -87,7 +91,7 @@ function ShowHistory() {
                     var rows = api.rows({page: 'current'}).nodes();
                     var last = null;
 
-                    api.column(1, {page: 'current'}).data().each(function (group, i) {
+                    api.column(0, {page: 'current'}).data().each(function (group, i) {
                         if (last !== group) {
                             $(rows).eq(i).before(
                                     '<tr class="group"><td colspan="5" style="background-color:silver; color:green; font-size:16px;">' + group + '</td></tr>'
@@ -107,7 +111,7 @@ function dt() {
     $('#history-checkout').dataTable();
 }
 
-function PrintHistory() {
+function PrintInv() {
     var start = encodeURIComponent($('#start-date').val());
     var end = encodeURIComponent($('#end-date').val());
     var job = encodeURIComponent($('#job').val());

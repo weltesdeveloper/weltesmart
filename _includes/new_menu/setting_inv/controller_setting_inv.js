@@ -1,7 +1,5 @@
 /* global conter */
-
 var counter = 1;
-
 function listMasterInvJson(handleData) {
     return $.ajax({
         type: "POST",
@@ -13,7 +11,6 @@ function listMasterInvJson(handleData) {
         }
     });
 }
-
 function feedToMasterInvtable() {
     listMasterInvJson(function (response) {
         var table = $('#master-inv-selection').DataTable({
@@ -58,7 +55,6 @@ function feedToMasterInvtable() {
         });
     });
 }
-
 function registerelement(param) {
     if ($('#register-check' + param).is(':checked')) {
         $('#table-konversi').DataTable().destroy();
@@ -86,8 +82,6 @@ function registerelement(param) {
         }
     }
 }
-
-
 function columnSelectProp() {
     var arr = [0, 1, 4, 6];
     this.api().columns(arr).every(function () {
@@ -109,8 +103,6 @@ function columnSelectProp() {
         $('.selectpicker').selectpicker();
     });
 }
-
-
 function RubahUnitTerkecil() {
     $('#table-konversi').DataTable().destroy();
     $('#table-konversi tbody').empty();
@@ -149,8 +141,6 @@ function RubahUnitTerkecil() {
     $('.selectpicker').selectpicker();
     counter++;
 }
-
-
 function AddUnit() {
     var unit_min = $('#unit-terkecil').val();
     var table = $('#table-konversi').dataTable();
@@ -186,7 +176,6 @@ function AddUnit() {
     $('.selectpicker').selectpicker();
     counter++;
 }
-
 function CheckUnitLvl1(param) {
     var unit = $('#CheckUnitLvl1').val();
     var unitSelect = "";
@@ -204,7 +193,6 @@ function CheckUnitLvl1(param) {
     }
 
 }
-
 function RemoveItem(param) {
     var table = $('#table-konversi').DataTable();
     table.row('#row' + param).remove().draw(false);
